@@ -1,4 +1,4 @@
-package fon.master.nst.apigateway;
+package fon.master.nst.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

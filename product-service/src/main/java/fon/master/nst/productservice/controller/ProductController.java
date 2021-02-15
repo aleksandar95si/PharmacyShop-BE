@@ -28,5 +28,8 @@ public class ProductController {
 		return productService.getAllProductsByGroupName(name);
 	}
 	
-	
+	@GetMapping("/{id}")
+	public Product findByProductId(@PathVariable("id") Long productId) {
+		return productService.findByProductId(productId);	
+	}
 }

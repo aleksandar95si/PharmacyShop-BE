@@ -2,3 +2,13 @@ server:
    port: 8081
    
 spring:  application:    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+      - id: PRODUCT-SERVICE
+        uri: lb://PRODUCT-SERVICE
+        predicates:
+        - Path=/products/**      - id: SHOPPING-CART
+        uri: lb://SHOPPING-CART
+        predicates:        - Path=/cart/**          
+          
