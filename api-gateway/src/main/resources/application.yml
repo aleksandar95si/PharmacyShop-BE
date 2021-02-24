@@ -10,5 +10,6 @@ spring:  application:    name: API-GATEWAY
         predicates:
         - Path=/products/**      - id: SHOPPING-CART
         uri: lb://SHOPPING-CART
-        predicates:        - Path=/cart/**          
-          
+        predicates:        - Path=/cart/**
+        
+    

@@ -1,4 +1,4 @@
-package fon.master.nst.shoppingcart.VO;
+package fon.master.nst.shoppingcart.dto;
 
 import java.io.Serializable;
 

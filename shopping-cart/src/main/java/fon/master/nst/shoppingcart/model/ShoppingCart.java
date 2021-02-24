@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import fon.master.nst.shoppingcart.VO.Product;
-import fon.master.nst.shoppingcart.VO.User;
+import fon.master.nst.shoppingcart.dto.Product;
+import fon.master.nst.shoppingcart.dto.User;
 
 @Entity
 @Table(name = "shopping_cart")
@@ -26,18 +26,18 @@ public class ShoppingCart implements Serializable {
 	private Long cartId;
 	
 	@Column(name="user_id")
-	private Long user;
+	private Long userId;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shoppingCart")
-	private List<CartItem> cartItem;
+	private List<CartItem> cartItem=new ArrayList<>();
 	
 	
 	public ShoppingCart() {
 		super();
 	}
-	public ShoppingCart(Long user) {
+	public ShoppingCart(Long userId) {
 		super();
-		this.user = user;
+		this.userId = userId;
 	}
 	public Long getCartId() {
 		return cartId;
@@ -46,10 +46,10 @@ public class ShoppingCart implements Serializable {
 		this.cartId = cartId;
 	}
 	public Long getUser() {
-		return user;
+		return userId;
 	}
-	public void setUser(Long user) {
-		this.user = user;
+	public void setUser(Long userId) {
+		this.userId = userId;
 	}
 	public List<CartItem> getCartItem() {
 		return getCartItem();

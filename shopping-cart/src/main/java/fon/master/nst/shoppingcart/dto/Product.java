@@ -1,16 +1,6 @@
-package fon.master.nst.shoppingcart.VO;
+package fon.master.nst.shoppingcart.dto;
 
 import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 
 public class Product implements Serializable {
 	

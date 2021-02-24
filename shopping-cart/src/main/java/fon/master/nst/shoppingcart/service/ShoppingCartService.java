@@ -1,18 +1,20 @@
 package fon.master.nst.shoppingcart.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import fon.master.nst.shoppingcart.VO.Product;
-import fon.master.nst.shoppingcart.VO.User;
-import fon.master.nst.shoppingcart.model.CartItem;
+import fon.master.nst.shoppingcart.config.AccesToken;
+import fon.master.nst.shoppingcart.dto.Product;
 import fon.master.nst.shoppingcart.model.CartItem;
 import fon.master.nst.shoppingcart.model.ShoppingCart;
 import fon.master.nst.shoppingcart.repository.CartItemRepository;
@@ -47,7 +49,14 @@ public class ShoppingCartService {
 		}*/
 		
 		// 3) Pronadji ID proizvoda
-		Product currProd=restTemplate.getForObject("http://localhost:8081/products/"+product.getProductId(), Product.class);
+		//Product currProd=restTemplate.getForObject("http://localhost:8081/products/"+product.getProductId(), Product.class);
+		
+		HttpHeaders httpHeader=new HttpHeaders();
+		httpHeader.add("Authorization", AccesToken.getAccesToken());
+		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
+		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://localhost:8083/products/"+product.getProductId(),
+																	HttpMethod.GET, productEntity, Product.class);
+		Product currProd=responseEntity.getBody();
 		
 		// 4) Hardkodovan je User
 		currShopCart=new ShoppingCart(5L); //hardkodovano
@@ -70,7 +79,7 @@ public class ShoppingCartService {
 	}
 
 	public ShoppingCart getShoppingCart(Long userId) {
-		return shoppingCartRepository.findByUser(userId);
+		return shoppingCartRepository.findByCartId(userId);
 	}
 	
 	public void removeCartItem(Long itemId) {
@@ -79,6 +88,16 @@ public class ShoppingCartService {
 	
 	public void deleteCart(Long cartId) {
 		shoppingCartRepository.deleteById(cartId);
+	}
+	
+	public Product getProductFromShopCart(Long productId) {
+		HttpHeaders httpHeader=new HttpHeaders();
+		httpHeader.add("Authorization", AccesToken.getAccesToken());
+		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
+		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://PRODUCT-SERVICE/products/"+productId,
+																	HttpMethod.GET, productEntity, Product.class);
+		Product currProd=responseEntity.getBody();
+		return currProd;
 	}
 	
 	

@@ -9,7 +9,9 @@ import fon.master.nst.shoppingcart.model.ShoppingCart;
 @Repository
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long>{
 
-	@Query
-	ShoppingCart findByUser(Long user);
+	//@Query
+	//ShoppingCart findByShoppingCartUserId(Long userId);
+	
+	ShoppingCart findByCartId(Long cartId);
 	
 }
