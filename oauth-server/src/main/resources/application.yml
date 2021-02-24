@@ -1,0 +1,27 @@
+server:
+   port: 8282
+   
+spring:
+  application: 
+     name: OAUTH-SERVER
+  datasource:
+    url: jdbc:mysql://localhost:3306/authDB?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+      
+       
