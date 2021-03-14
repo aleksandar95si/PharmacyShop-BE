@@ -32,10 +32,11 @@ public class ShoppingCartService {
 	private RestTemplate restTemplate;
 	
 	
-	public void addItem(Product product) {
+	public void addItem(Long productId) {
 		
 		// 1) Pronadji trenutno ulogovanog USER-a
 		//User currUser=restTemplate.getForObject("http://USER-SERVICE//user/"+user.getUserId(), User.class);
+		 
 		
 		// 2) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
 		ShoppingCart currShopCart;
@@ -54,12 +55,17 @@ public class ShoppingCartService {
 		HttpHeaders httpHeader=new HttpHeaders();
 		httpHeader.add("Authorization", AccesToken.getAccesToken());
 		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
-		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://localhost:8083/products/"+product.getProductId(),
+		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://localhost:8081/products/"+productId,
 																	HttpMethod.GET, productEntity, Product.class);
 		Product currProd=responseEntity.getBody();
 		
+		ResponseEntity<Integer> userEntity=restTemplate.exchange("http://localhost:8282/userDetails/getUser",
+																HttpMethod.GET, productEntity, Integer.class);
+		
+		
 		// 4) Hardkodovan je User
-		currShopCart=new ShoppingCart(5L); //hardkodovano
+		currShopCart=new ShoppingCart(Long.valueOf(userEntity.getBody())); //hardkodovano
+		//currShopCart=new ShoppingCart(7L); //hardkodovano
 		//currShopCart.setUser(1L);
 		//currShopCart=shoppingCartRepository.findByUser(1L);
 		

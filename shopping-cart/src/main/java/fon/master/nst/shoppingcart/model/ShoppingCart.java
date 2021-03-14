@@ -33,7 +33,7 @@ public class ShoppingCart implements Serializable {
 	
 	
 	public ShoppingCart() {
-		super();
+		
 	}
 	public ShoppingCart(Long userId) {
 		super();
@@ -57,7 +57,4 @@ public class ShoppingCart implements Serializable {
 	public void setCartItem(List<CartItem> cartItem) {
 		this.cartItem = cartItem;
 	}
-	
-	
-
 }

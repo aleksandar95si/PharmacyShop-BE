@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class ProductGroup implements Serializable{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="group_id")
 	private Long groupId;
 	private String name;

@@ -24,6 +24,11 @@ public class ProductService {
 	}
 
 	public Product findByProductId(Long productId) {
+		System.out.println("ODRADIO SAM");
 		return productRepository.findByProductId(productId);
+	}
+	
+	public void addProduct(Product product) {
+		productRepository.save(product);
 	}
 }

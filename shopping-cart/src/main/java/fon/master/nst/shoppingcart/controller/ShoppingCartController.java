@@ -22,9 +22,9 @@ public class ShoppingCartController {
 	@Autowired
 	private ShoppingCartService shoppingCartService;
 	
-	@PostMapping("/addItem")
-	public void addItem(@RequestBody Product product) {
-		shoppingCartService.addItem(product);
+	@PostMapping("/addItem/{id}")
+	public void addItem(@PathVariable("id") Long productId) {
+		shoppingCartService.addItem(productId);
 	}
 	
 	@GetMapping("/{id}")
