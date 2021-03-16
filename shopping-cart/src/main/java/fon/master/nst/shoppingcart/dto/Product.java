@@ -7,8 +7,8 @@ public class Product implements Serializable {
 	
 	private Long productId;
 	private String name;
-	private int price;
-	
+	private Long price;
+	private String productImgPath;
 	private ProductGroup productGroup;
 	
 	public Product() {
@@ -18,7 +18,7 @@ public class Product implements Serializable {
 	public Long getProductId() {
 		return productId;
 	}
-	public void setProductid(Long productId) {
+	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
 	public String getName() {
@@ -27,10 +27,10 @@ public class Product implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getPrice() {
+	public Long getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
 	public ProductGroup getProductGroup() {
@@ -39,6 +39,16 @@ public class Product implements Serializable {
 	public void setProductGroup(ProductGroup productGroup) {
  		this.productGroup = productGroup;
     }
+	
+	public String getProductImgPath() {
+		return productImgPath;
+	}
+
+	public void setProductImgPath(String productImgPath) {
+		this.productImgPath = productImgPath;
+	}
+
+	
 
 	@Override
 	public String toString() {

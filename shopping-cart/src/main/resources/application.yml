@@ -9,13 +9,13 @@ spring:
    application: 
      name: SHOPPING-CART
    datasource:
-       url: jdbc:mysql://localhost:3306/shopping-cart-service-db?serverTimezone=UTC
+       url: jdbc:mysql://localhost:3306/shopping-cart-service-dba?serverTimezone=UTC
        username: root
        password: root
        driver-class-name: com.mysql.jdbc.Driver
    jpa:
      hibernate:
-   
+       ddl-auto: create
        naming:
          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -24,6 +24,7 @@ spring:
          show_sql: true
          use_sql_comments: true
          format_sql: true
+      
          
 security:
   oauth2:

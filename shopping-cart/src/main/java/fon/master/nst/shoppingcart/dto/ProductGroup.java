@@ -16,7 +16,7 @@ public class ProductGroup implements Serializable{
 
 	private Long groupId;
 	private String name;
-
+	private String groupImgPath;
 	
 	public ProductGroup() {
 		
@@ -36,6 +36,14 @@ public class ProductGroup implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getGroupImgPath() {
+		return groupImgPath;
+	}
+
+	public void setGroupImgPath(String groupImgPath) {
+		this.groupImgPath = groupImgPath;
 	}
 
 	@Override

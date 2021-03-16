@@ -19,7 +19,8 @@ public class ProductGroup implements Serializable{
 	@Column(name="group_id")
 	private Long groupId;
 	private String name;
-
+	@Column(name="group_img_path")
+	private String groupImgPath;
 	
 	public ProductGroup() {
 		
@@ -40,5 +41,14 @@ public class ProductGroup implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public String getGroupImgPath() {
+		return groupImgPath;
+	}
+
+	public void setGroupImgPath(String groupImgPath) {
+		this.groupImgPath = groupImgPath;
+	}
+	
 	
 }

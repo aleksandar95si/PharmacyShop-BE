@@ -20,7 +20,9 @@ public class Product implements Serializable {
 	@Column(name="product_id")
 	private Long productId;
 	private String name;
-	private int price;
+	private Long price;
+	@Column(name="product_img_path")
+	private String productImgPath;
 	@OneToOne
 	@JoinColumn(name="group_id")
 	private ProductGroup productGroup;
@@ -32,7 +34,7 @@ public class Product implements Serializable {
 	public Long getProductId() {
 		return productId;
 	}
-	public void setProductid(Long productId) {
+	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
 	public String getName() {
@@ -41,12 +43,21 @@ public class Product implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getPrice() {
+	public Long getPrice() {
 		return price;
 	}
-	public void setPrice(int price) {
+	public void setPrice(Long price) {
 		this.price = price;
 	}
+	
+	public String getProductImgPath() {
+		return productImgPath;
+	}
+
+	public void setProductImgPath(String productImgPath) {
+		this.productImgPath = productImgPath;
+	}
+
 	public ProductGroup getProductGroup() {
 		return productGroup;
 	}

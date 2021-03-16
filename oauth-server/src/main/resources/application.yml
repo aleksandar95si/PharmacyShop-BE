@@ -18,6 +18,13 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+        
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://localhost:8282/oauth2/userinfo
+      
+
 logging:
   level:
     org:

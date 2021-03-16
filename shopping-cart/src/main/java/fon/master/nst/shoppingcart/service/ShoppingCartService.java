@@ -2,6 +2,7 @@ package fon.master.nst.shoppingcart.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -12,8 +13,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import fon.master.nst.shoppingcart.config.AccesToken;
 import fon.master.nst.shoppingcart.dto.Product;
 import fon.master.nst.shoppingcart.model.CartItem;
 import fon.master.nst.shoppingcart.model.ShoppingCart;
@@ -30,81 +29,75 @@ public class ShoppingCartService {
 	private CartItemRepository cartItemRepository;
 	@Autowired
 	private RestTemplate restTemplate;
-	
+	@Autowired
+	private CurrentLoggedInUserService currentLoggedInUserService;
 	
 	public void addItem(Long productId) {
 		
-		// 1) Pronadji trenutno ulogovanog USER-a
-		//User currUser=restTemplate.getForObject("http://USER-SERVICE//user/"+user.getUserId(), User.class);
-		 
-		
-		// 2) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
+	// 1) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
 		ShoppingCart currShopCart;
-		/*try {
-			//currShopCart=shoppingCartRepository.findByShoppingCartUser(currUser.getUserId());
-			currShopCart=shoppingCartRepository.findByUser(1L); //hardkodovano
-		
-		} catch(Exception e) {
-			//currShopCart=shoppingCartRepository.save(new ShoppingCart(currUser.getUserId()));
-			currShopCart=shoppingCartRepository.save(new ShoppingCart(1L)); //hardkodovano
-		}*/
-		
-		// 3) Pronadji ID proizvoda
-		//Product currProd=restTemplate.getForObject("http://localhost:8081/products/"+product.getProductId(), Product.class);
-		
+		currShopCart=getShoppingCart();
+		if(currShopCart==null) {
+			currShopCart=new ShoppingCart(currentLoggedInUserService.getCurrentUser()); 		
+			currShopCart.setBill(0L);
+		}
+	
+	// 2) Pronadji ID proizvoda
 		HttpHeaders httpHeader=new HttpHeaders();
-		httpHeader.add("Authorization", AccesToken.getAccesToken());
+		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
-		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://localhost:8081/products/"+productId,
+		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://PRODUCT-SERVICE/products/"+productId,
 																	HttpMethod.GET, productEntity, Product.class);
 		Product currProd=responseEntity.getBody();
 		
-		ResponseEntity<Integer> userEntity=restTemplate.exchange("http://localhost:8282/userDetails/getUser",
-																HttpMethod.GET, productEntity, Integer.class);
-		
-		
-		// 4) Hardkodovan je User
-		currShopCart=new ShoppingCart(Long.valueOf(userEntity.getBody())); //hardkodovano
-		//currShopCart=new ShoppingCart(7L); //hardkodovano
-		//currShopCart.setUser(1L);
-		//currShopCart=shoppingCartRepository.findByUser(1L);
-		
-		// 5) Napraviti novi CartItem, dodeliti mi ID proizvoda i povezati sa Cart-om 
+	// 3) Napraviti novi CartItem, dodeliti mi ID proizvoda i ime i povezati sa Cart-om 
 		CartItem cartItem=new CartItem(currShopCart);
 		cartItem.setProductId(currProd.getProductId());
-		
-		// 6) Dodati item u listu Item-a korpe
+		cartItem.setProductName(currProd.getName());
+		cartItem.setPrice(currProd.getPrice());
+	
+	// 4) Dodati item u listu Item-a korpe
 		List<CartItem> lista=new ArrayList<>();
 		lista.add(cartItem);
 		currShopCart.setCartItem(lista);
-		
-		// 7) Sacuvati Cart i Item
-		shoppingCartRepository.save(currShopCart);	
-		cartItemRepository.save(cartItem);
-		
+		currShopCart.setBill(currShopCart.getBill()+cartItem.getPrice());
+
+	// 5) Sacuvati ShoppingCart
+		shoppingCartRepository.save(currShopCart);		
 	}
 
-	public ShoppingCart getShoppingCart(Long userId) {
-		return shoppingCartRepository.findByCartId(userId);
+	public ShoppingCart getShoppingCart() {
+		System.out.println(currentLoggedInUserService.getCurrentUser());
+		return shoppingCartRepository.findByUsername(currentLoggedInUserService.getCurrentUser());
 	}
 	
 	public void removeCartItem(Long itemId) {
-		cartItemRepository.deleteById(itemId);
+		CartItem item=cartItemRepository.findByItemId(itemId);
+		ShoppingCart cart=shoppingCartRepository.findByCartItemItemId(item.getItemId());
+		cart.setBill(cart.getBill()-item.getPrice());
+		cartItemRepository.deleteById(itemId);		
 	}
 	
 	public void deleteCart(Long cartId) {
 		shoppingCartRepository.deleteById(cartId);
 	}
 	
+	public ShoppingCart getCartById(Long cartId) {
+		return shoppingCartRepository.findByCartId(cartId);
+	}
+
+	public CartItem getItem(Long cartId) {
+		return cartItemRepository.findByItemId(cartId);
+	}
+	
+	// postoji samo zbog provere da li funkcija radi - OBRISATI
 	public Product getProductFromShopCart(Long productId) {
 		HttpHeaders httpHeader=new HttpHeaders();
-		httpHeader.add("Authorization", AccesToken.getAccesToken());
+		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
 		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://PRODUCT-SERVICE/products/"+productId,
 																	HttpMethod.GET, productEntity, Product.class);
 		Product currProd=responseEntity.getBody();
 		return currProd;
 	}
-	
-	
 }

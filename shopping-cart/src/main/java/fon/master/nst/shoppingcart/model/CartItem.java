@@ -1,7 +1,10 @@
 package fon.master.nst.shoppingcart.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -9,10 +12,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;;
+
 
 @Entity
 @Table(name="cart_item")
-public class CartItem {
+public class CartItem implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +27,14 @@ public class CartItem {
 	private Long itemId;
 	@Column(name="product_id")
 	private Long productId;
+	@Column(name="product_name")
+	private String productName;
+	@Column(name="price")
+	private Long price;
 	
-	@ManyToOne
 	@JoinColumn(name = "cart_id")
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JsonBackReference
 	private ShoppingCart shoppingCart;
 	
 	public CartItem() {
@@ -50,13 +62,37 @@ public class CartItem {
 	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
+	
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
 
 	public ShoppingCart getShoppingCart() {
 		return shoppingCart;
 	}
-
+	
 	public void setShoppingCart(ShoppingCart shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}
-		
+
+	@Override
+	public String toString() {
+		return "CartItem [itemId=" + itemId + ", productId=" + productId + ", shoppingCart=" + shoppingCart.toString() + "]";
+	}
+
+ 
+	
+	
 }

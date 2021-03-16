@@ -4,6 +4,10 @@ server:
 spring:  application:    name: API-GATEWAY
   cloud:
     gateway:
+      globalcors:        cors-configurations:          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
       routes:
       - id: PRODUCT-SERVICE
         uri: lb://PRODUCT-SERVICE

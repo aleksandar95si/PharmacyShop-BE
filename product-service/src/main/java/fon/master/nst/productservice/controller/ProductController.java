@@ -4,15 +4,16 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import fon.master.nst.productservice.model.Product;
+import fon.master.nst.productservice.model.ProductGroup;
+import fon.master.nst.productservice.service.ProductGroupService;
 import fon.master.nst.productservice.service.ProductService;
 
 @RestController
@@ -22,6 +23,8 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private ProductGroupService productGroupService;
 		
 	@GetMapping("/all")
 	public List<Product> getProduct() {
@@ -29,7 +32,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/group/{name}")
-	public List<Product> getProductsByName(@PathVariable("name") String name) {
+	public List<Product> getProductsByGroupName(@PathVariable("name") String name) {
 		return productService.getAllProductsByGroupName(name);
 	}
 	
@@ -38,8 +41,29 @@ public class ProductController {
 		return productService.findByProductId(productId);	
 	}
 	
+	@GetMapping("/group/all")
+	public List<ProductGroup> getAllGroups() {
+		return productService.getAllGroups();	}
+	
 	@PostMapping(value="/add",  consumes = "application/json")
 	public void addProduct(@RequestBody Product product) {
 		productService.addProduct(product);
 	}
+	
+	@GetMapping("/group/get/{name}")
+	public ProductGroup findGroupByName(@PathVariable("name") String name) {
+		return productGroupService.findByName(name);
+	}
+	
+	@PostMapping("/group/add") 
+	public void addGroup(@RequestBody ProductGroup productGroup) {
+		productGroupService.addProductGroup(productGroup);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void deleteProduct(@PathVariable("id") Long id) {
+		productService.deleteById(id);
+	}
+	
+	
 }

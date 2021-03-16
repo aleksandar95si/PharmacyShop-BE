@@ -1,4 +1,4 @@
-package fon.master.nst.shoppingcart.crossfilter;
+package fon.master.nst.userservice.crosfilter;
 
 import java.io.IOException;
 
