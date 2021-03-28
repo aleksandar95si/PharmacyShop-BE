@@ -15,7 +15,7 @@ spring:
        driver-class-name: com.mysql.jdbc.Driver
    jpa:
      hibernate:
-       ddl-auto: create
+      
        naming:
          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

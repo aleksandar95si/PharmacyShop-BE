@@ -1,0 +1,41 @@
+server:
+    servlet:
+     session:
+      cookie:
+        name: KSESSION
+    port: 8085
+    
+spring:
+   application: 
+     name: ORDER-SERVICE
+   mail:    protocol: smtp
+    host: smtp.gmail.com
+    port: 587
+    username: nst.mail.sender.test@gmail.com    password: hbissbvxykufxjib
+    properties:
+       mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+         
+logging:
+  level:
+    org:
+      hibernate:
+        type: trace
+
+security:
+  oauth2:
+    client:
+      client-id: cart
+      client-secret: cartpass
+      user-authorization-uri: http://localhost:8282/oauth/authorize
+      access-token-uri: http://localhost:8282/oauth/token
+      scope: READ,WRITE
+      auto-approve-scopes: '.*'
+    resource:
+      token-info-uri: http://localhost:8282/oauth/check_token
+      
+
+       

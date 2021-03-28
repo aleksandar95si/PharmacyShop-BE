@@ -1,8 +1,10 @@
 package fon.master.nst.userservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,22 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fon.master.nst.userservice.model.User;
-import fon.master.nst.userservice.service.UserService;
+import fon.master.nst.userservice.service.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 	
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userServiceImpl;
 	
 	@PostMapping("/save")
-	public void addUser(@RequestBody User user) {
-		userService.addUser(user);
+	public ResponseEntity addUser(@RequestBody User user) {
+		userServiceImpl.addUser(user);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
 	@DeleteMapping("/logout/{token}")
 	public void logout(@PathVariable("token") String token) {
-		userService.logout(token);
+		userServiceImpl.logout(token);
 	}	
 }

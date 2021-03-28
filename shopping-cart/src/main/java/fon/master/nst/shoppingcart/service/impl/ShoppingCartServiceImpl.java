@@ -67,14 +67,17 @@ public class ShoppingCartService {
 	}
 
 	public ShoppingCart getShoppingCart() {
-		System.out.println(currentLoggedInUserService.getCurrentUser());
 		return shoppingCartRepository.findByUsername(currentLoggedInUserService.getCurrentUser());
 	}
 	
 	public void removeCartItem(Long itemId) {
 		CartItem item=cartItemRepository.findByItemId(itemId);
 		ShoppingCart cart=shoppingCartRepository.findByCartItemItemId(item.getItemId());
-		cart.setBill(cart.getBill()-item.getPrice());
+		if(cart.getBill()-item.getPrice()<0) {
+			cart.setBill(0L);
+		} else {
+			cart.setBill(cart.getBill()-item.getPrice());
+		}
 		cartItemRepository.deleteById(itemId);		
 	}
 	
