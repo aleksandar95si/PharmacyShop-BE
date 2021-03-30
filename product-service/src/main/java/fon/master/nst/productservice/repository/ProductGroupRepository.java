@@ -7,7 +7,5 @@ import fon.master.nst.productservice.model.ProductGroup;
 
 @Repository
 public interface ProductGroupRepository extends JpaRepository<ProductGroup, Long> {
-
 	ProductGroup findByName(String name);
-
 }

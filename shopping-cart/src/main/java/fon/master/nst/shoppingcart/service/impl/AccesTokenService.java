@@ -1,4 +1,4 @@
-package fon.master.nst.shoppingcart.service;
+package fon.master.nst.shoppingcart.service.impl;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
@@ -6,7 +6,6 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 public class AccesTokenService {
 
 	public static String getAccesToken() {
-		
 		OAuth2AuthenticationDetails authenticationDetails=(OAuth2AuthenticationDetails) SecurityContextHolder.getContext().getAuthentication().getDetails();
         return authenticationDetails.getTokenType().concat(" ").concat(authenticationDetails.getTokenValue());
 	} 

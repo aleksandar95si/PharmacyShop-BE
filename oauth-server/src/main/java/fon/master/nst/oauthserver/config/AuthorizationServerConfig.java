@@ -24,10 +24,10 @@ public class AuthorizationServerConfig implements AuthorizationServerConfigurer 
 	
 	@Autowired
 	private DataSource dataSource;
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Bean
 	public TokenStore getTokenStore() {
 		return new JdbcTokenStore(dataSource);
@@ -40,11 +40,9 @@ public class AuthorizationServerConfig implements AuthorizationServerConfigurer 
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		
 	    clients
 	    		.jdbc(dataSource)
 		        .passwordEncoder(passwordEncoder);
-		
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package fon.master.nst.oauthserver.crossfilter;
+package fon.master.nst.oauthserver.corsfilter;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class CrossFilter implements Filter {
+public class CorsFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -29,8 +29,6 @@ public class CrossFilter implements Filter {
 		res.setHeader("Access-Control-Max-Age", "3600");
 		res.setHeader("Access-Control-Allow-Headers",
 				"x-requested-with, authorization, content-type");
-		
-	//	res.setHeader("Access-Control-Allow-Credentials", "true");
 		
 		if("OPTIONS".equalsIgnoreCase(req.getMethod())) {
 			res.setStatus(HttpServletResponse.SC_OK);

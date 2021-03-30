@@ -12,11 +12,20 @@ import javax.persistence.Table;
 public class Token implements Serializable {
 
 	@Id
+	@Column(name="token_id")
+	private String tokenId;
+	
 	@Column(name="authentication_id")
 	private String authenticationId;
 	
-	@Column(name="token_id")
-	private String tokenId;
+	@Column(name="user_name")
+	private String username;
+	
+	@Column(name="client_id")
+	private String clientId;
+	
+	@Column(name="refresh_token")
+	private String refreshToken;
 
 	public String getTokenId() {
 		return tokenId;
@@ -34,9 +43,27 @@ public class Token implements Serializable {
 		this.authenticationId = authenticationId;
 	}
 
-	
-	
-	
-	
-	
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
 }

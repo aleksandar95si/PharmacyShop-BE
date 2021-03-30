@@ -4,17 +4,22 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import fon.master.nst.productservice.exceptions.ProductGroupException;
 import fon.master.nst.productservice.model.Product;
 import fon.master.nst.productservice.model.ProductGroup;
-import fon.master.nst.productservice.service.ProductGroupService;
-import fon.master.nst.productservice.service.ProductService;
+import fon.master.nst.productservice.service.impl.ProductGroupServiceImpl;
+import fon.master.nst.productservice.service.impl.ProductServiceImpl;
 
 @RestController
 @RequestMapping("/products")
@@ -22,47 +27,65 @@ import fon.master.nst.productservice.service.ProductService;
 public class ProductController {
 
 	@Autowired
-	private ProductService productService;
+	private ProductServiceImpl productServiceImpl;
 	@Autowired
-	private ProductGroupService productGroupService;
+	private ProductGroupServiceImpl productGroupServiceImpl;
 		
 	@GetMapping("/all")
 	public List<Product> getProduct() {
-		return productService.findAllProducts();
+		return productServiceImpl.findAllProducts();
 	}
 	
 	@GetMapping("/group/{name}")
-	public List<Product> getProductsByGroupName(@PathVariable("name") String name) {
-		return productService.getAllProductsByGroupName(name);
+	public @ResponseBody ResponseEntity<List<Product>> getProductsByGroupName(@PathVariable("name") String name) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.getAllProductsByGroupName(name));
+		} catch (ProductGroupException e) {
+			// TODO Auto-generated catch block
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		
 	}
 	
 	@GetMapping("/{id}")
 	public Product findByProductId(@PathVariable("id") Long productId) {
-		return productService.findByProductId(productId);	
+		return productServiceImpl.findByProductId(productId);	
 	}
 	
 	@GetMapping("/group/all")
-	public List<ProductGroup> getAllGroups() {
-		return productService.getAllGroups();	}
+	public ResponseEntity<List<ProductGroup>> getAllGroups() {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(productGroupServiceImpl.getAllGroups());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+	}
 	
 	@PostMapping(value="/add",  consumes = "application/json")
-	public void addProduct(@RequestBody Product product) {
-		productService.addProduct(product);
+	public  ResponseEntity addProduct(@RequestBody Product product) {
+		productServiceImpl.addProduct(product);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/group/get/{name}")
-	public ProductGroup findGroupByName(@PathVariable("name") String name) {
-		return productGroupService.findByName(name);
+	public ResponseEntity<ProductGroup> findGroupByName(@PathVariable("name") String name) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(productGroupServiceImpl.findByName(name));
+		} catch (Exception e) {
+			 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
 	}
 	
 	@PostMapping("/group/add") 
-	public void addGroup(@RequestBody ProductGroup productGroup) {
-		productGroupService.addProductGroup(productGroup);
+	public ResponseEntity addGroup(@RequestBody ProductGroup productGroup) {
+		productGroupServiceImpl.addProductGroup(productGroup);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public void deleteProduct(@PathVariable("id") Long id) {
-		productService.deleteById(id);
+	public ResponseEntity deleteProduct(@PathVariable("id") Long id) {
+		productServiceImpl.deleteById(id);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
 	

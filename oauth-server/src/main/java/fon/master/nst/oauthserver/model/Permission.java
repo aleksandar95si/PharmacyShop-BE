@@ -6,7 +6,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = "permission")
 public class Permission implements Serializable {
-    @Id
+   
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(name = "name")
@@ -23,6 +24,5 @@ public class Permission implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-    
     
 }

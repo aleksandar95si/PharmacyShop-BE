@@ -7,11 +7,8 @@ import java.util.List;
 public class ShoppingCart implements Serializable {
 
 	private Long cartId;
-	
 	private String username;
-	
 	private Long bill;
-	
 	private List<CartItem> cartItem=new ArrayList<>();
 	
 	

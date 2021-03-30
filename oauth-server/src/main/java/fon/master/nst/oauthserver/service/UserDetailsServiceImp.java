@@ -23,7 +23,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<User> optionalUser=userDetailRepository.findByUsername(username);
 		
-		optionalUser.orElseThrow(() -> new UsernameNotFoundException("Wrond username or password"));
+		optionalUser.orElseThrow(() -> new UsernameNotFoundException("Wrong username or password"));
 		
 		UserDetails userDetails=new AuthUserDetail(optionalUser.get());
 		

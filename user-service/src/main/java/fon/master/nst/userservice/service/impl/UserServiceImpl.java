@@ -1,5 +1,7 @@
 package fon.master.nst.userservice.service.impl;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import fon.master.nst.userservice.repository.UserRepository;
 import fon.master.nst.userservice.service.UserService;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -25,7 +28,7 @@ public class UserServiceImpl implements UserService {
 		userRepository.save(userSave);
 	}
 	
-	public void logout(String accessToken) {
-		tokenRepository.deleteByTokenId(accessToken);
+	public void logout(String username) {
+		tokenRepository.deleteByUsername(username);
 	}
 }

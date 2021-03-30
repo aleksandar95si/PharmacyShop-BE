@@ -1,4 +1,4 @@
-package fon.master.nst.orderservice.service;
+package fon.master.nst.orderservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,9 +12,10 @@ import org.springframework.web.client.RestTemplate;
 
 import fon.master.nst.orderservice.dto.CartItem;
 import fon.master.nst.orderservice.dto.ShoppingCart;
+import fon.master.nst.orderservice.service.EmailService;
 
 @Service
-public class EmailService {
+public class EmailServiceImpl implements EmailService{
 
 	@Autowired
 	private RestTemplate restTemplate;
@@ -23,14 +24,17 @@ public class EmailService {
 	@Autowired
 	private CurrentLoggedInUserService currentLoggedInUserService;
 	
-
-	public void getOrderItemsAndsendEmail(String recipient) {
+	public void getOrderItemsAndSendEmail(String recipient) {
+		
 		HttpHeaders httpHeaders=new HttpHeaders();
 		httpHeaders.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<ShoppingCart> httpEntity=new HttpEntity<>(httpHeaders);
 		ResponseEntity<ShoppingCart> responseEntity=restTemplate.exchange("http://SHOPPING-CART/cart/get", HttpMethod.GET, httpEntity, ShoppingCart.class);
+		
 		ShoppingCart shoppingCart=responseEntity.getBody();
+		
 		String order="ID: 	 NAZIV:	  CENA:\r\n \r\n";
+		
 		for(CartItem cartItem : shoppingCart.getCartItem()) {
 			order=order + cartItem.getProductId() + " " + cartItem.getProductName() + " " + cartItem.getPrice() + "\r\n";
 		}

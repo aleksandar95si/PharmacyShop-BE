@@ -19,6 +19,10 @@ spring:  application:    name: API-GATEWAY
         uri: lb://ORDER-SERVICE
         predicates:
         - Path=/order/**
+      - id: USER-SERVICE
+        uri: lb://USER-SERVICE
+        predicates:
+        - Path=/user/**
  
             
             

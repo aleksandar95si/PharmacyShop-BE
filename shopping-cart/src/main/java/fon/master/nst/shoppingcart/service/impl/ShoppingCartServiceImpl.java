@@ -1,8 +1,7 @@
-package fon.master.nst.shoppingcart.service;
+package fon.master.nst.shoppingcart.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -18,10 +17,11 @@ import fon.master.nst.shoppingcart.model.CartItem;
 import fon.master.nst.shoppingcart.model.ShoppingCart;
 import fon.master.nst.shoppingcart.repository.CartItemRepository;
 import fon.master.nst.shoppingcart.repository.ShoppingCartRepository;
+import fon.master.nst.shoppingcart.service.ShoppingCartService;
 
 @Service
 @Transactional
-public class ShoppingCartService {
+public class ShoppingCartServiceImpl implements ShoppingCartService {
 	
 	@Autowired
 	private ShoppingCartRepository shoppingCartRepository;
@@ -42,7 +42,7 @@ public class ShoppingCartService {
 			currShopCart.setBill(0L);
 		}
 	
-	// 2) Pronadji ID proizvoda
+	// 2) Pronadji proizvod
 		HttpHeaders httpHeader=new HttpHeaders();
 		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
@@ -50,7 +50,7 @@ public class ShoppingCartService {
 																	HttpMethod.GET, productEntity, Product.class);
 		Product currProd=responseEntity.getBody();
 		
-	// 3) Napraviti novi CartItem, dodeliti mi ID proizvoda i ime i povezati sa Cart-om 
+	// 3) Napraviti novi CartItem, dodeliti mu ID proizvoda i ime i povezati sa Cart-om 
 		CartItem cartItem=new CartItem(currShopCart);
 		cartItem.setProductId(currProd.getProductId());
 		cartItem.setProductName(currProd.getName());
@@ -91,16 +91,5 @@ public class ShoppingCartService {
 
 	public CartItem getItem(Long cartId) {
 		return cartItemRepository.findByItemId(cartId);
-	}
-	
-	// postoji samo zbog provere da li funkcija radi - OBRISATI
-	public Product getProductFromShopCart(Long productId) {
-		HttpHeaders httpHeader=new HttpHeaders();
-		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
-		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
-		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://PRODUCT-SERVICE/products/"+productId,
-																	HttpMethod.GET, productEntity, Product.class);
-		Product currProd=responseEntity.getBody();
-		return currProd;
 	}
 }

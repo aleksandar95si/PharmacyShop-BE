@@ -28,8 +28,8 @@ logging:
 security:
   oauth2:
     client:
-      client-id: cart
-      client-secret: cartpass
+      client-id: order-service
+      client-secret: pass
       user-authorization-uri: http://localhost:8282/oauth/authorize
       access-token-uri: http://localhost:8282/oauth/token
       scope: READ,WRITE

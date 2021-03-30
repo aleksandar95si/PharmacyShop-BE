@@ -9,7 +9,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class AuthUserDetail extends User implements UserDetails {
-
 	
 	public AuthUserDetail() {
 		super();

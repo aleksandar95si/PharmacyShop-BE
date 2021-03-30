@@ -24,13 +24,12 @@ spring:
          show_sql: true
          use_sql_comments: true
          format_sql: true
-      
-         
+            
 security:
   oauth2:
     client:
-      client-id: cart
-      client-secret: cartpass
+      client-id: shopping-cart-service
+      client-secret: pass
       user-authorization-uri: http://localhost:8282/oauth/authorize
       access-token-uri: http://localhost:8282/oauth/token
       scope: READ,WRITE

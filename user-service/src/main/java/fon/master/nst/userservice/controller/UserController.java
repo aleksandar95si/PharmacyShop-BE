@@ -3,7 +3,6 @@ package fon.master.nst.userservice.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +26,8 @@ public class UserController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	@DeleteMapping("/logout/{token}")
-	public void logout(@PathVariable("token") String token) {
-		userServiceImpl.logout(token);
+	@DeleteMapping("/logout/{username}")
+	public void logout(@PathVariable("username") String username) {
+		userServiceImpl.logout(username);
 	}	
 }

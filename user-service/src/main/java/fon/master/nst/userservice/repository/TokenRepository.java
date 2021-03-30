@@ -7,7 +7,5 @@ import fon.master.nst.userservice.model.Token;
 
 @Repository
 public interface TokenRepository extends JpaRepository<Token, String>{
-
-	
-	void deleteByTokenId(String tokenId);
+	void deleteByUsername(String username);
 }

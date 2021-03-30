@@ -5,7 +5,6 @@ import java.io.Serializable;
 
 public class CartItem implements Serializable {
 
-	
 	private Long itemId;
 	private Long productId;
 	private String productName;
