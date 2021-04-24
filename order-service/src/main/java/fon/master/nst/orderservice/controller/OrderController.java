@@ -22,10 +22,17 @@ public class OrderController {
 		emailService.getOrderItemsAndSendEmail(recipient);
 	}
 	*/
-	
+	/*
 	@PostMapping("/submit")
 	public ResponseEntity getOrderItemsAndSendEmail() {
-		emailServiceImpl.getOrderItemsAndSendEmail(""); //hardkotovati mejl primaoca radi testiranja
+		emailServiceImpl.getOrderItemsAndSendEmail("a.risticc95@gmail.com"); //hardkotovati mejl primaoca radi testiranja
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	} */
+	
+
+	@PostMapping("/submit")
+	public ResponseEntity getOrderItemsAndSendEmail() {
+		emailServiceImpl.sendPDFReport(""); //hardkotovati mejl primaoca radi testiranja
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 }
