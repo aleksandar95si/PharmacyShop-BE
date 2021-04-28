@@ -2,6 +2,8 @@ package fon.master.nst.productservice.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,9 @@ public class ProductController {
 	private ProductServiceImpl productServiceImpl;
 	@Autowired
 	private ProductGroupServiceImpl productGroupServiceImpl;
-		
+
+	private Logger logger=LoggerFactory.getLogger(ProductController.class);
+	
 	@GetMapping("/all")
 	public List<Product> getProduct() {
 		return productServiceImpl.findAllProducts();
@@ -39,6 +43,7 @@ public class ProductController {
 	@GetMapping("/group/{name}")
 	public @ResponseBody ResponseEntity<List<Product>> getProductsByGroupName(@PathVariable("name") String name) {
 		try {
+			logger.info("Clicked on group name: "+name);
 			return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.getAllProductsByGroupName(name));
 		} catch (ProductGroupException e) {
 			// TODO Auto-generated catch block
@@ -55,6 +60,7 @@ public class ProductController {
 	@GetMapping("/group/all")
 	public ResponseEntity<List<ProductGroup>> getAllGroups() {
 		try {
+			
 			return ResponseEntity.status(HttpStatus.OK).body(productGroupServiceImpl.getAllGroups());
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

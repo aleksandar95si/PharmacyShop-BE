@@ -3,6 +3,8 @@ package fon.master.nst.shoppingcart.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.http.HttpStatus;
@@ -29,8 +31,11 @@ public class ShoppingCartController {
 	@Autowired
 	private ShoppingCartServiceImpl shoppingCartServiceImpl;
 	
+	private Logger logger=LoggerFactory.getLogger(ShoppingCartController.class);
+	
 	@PostMapping("/addItem/{id}")
 	public ResponseEntity addItem(@PathVariable("id") Long productId) {
+		logger.info("User clicked on addItem method");
 		shoppingCartServiceImpl.addItem(productId);
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
@@ -47,6 +52,7 @@ public class ShoppingCartController {
 	
 	@DeleteMapping("/item/{id}")
 	public ResponseEntity deleteItem (@PathVariable("id") Long itemId) {
+		logger.info("User clicked on deleteItem method");
 		shoppingCartServiceImpl.removeCartItem(itemId);
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}

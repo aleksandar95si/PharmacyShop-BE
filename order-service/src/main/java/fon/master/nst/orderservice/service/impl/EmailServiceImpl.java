@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
@@ -39,6 +41,8 @@ public class EmailServiceImpl implements EmailService{
 	@Autowired
 	private CurrentLoggedInUserService currentLoggedInUserService;
 	
+	private Logger logger=LoggerFactory.getLogger(EmailServiceImpl.class);
+	
 	public void getOrderItemsAndSendEmail(String recipient) {
 		
 		HttpHeaders httpHeaders=new HttpHeaders();
@@ -60,6 +64,9 @@ public class EmailServiceImpl implements EmailService{
 	}
 	
 	public void sendPDFReport(String recipient) {
+		
+		logger.info("Order microservice calls Shopping cart microservice to get shopping cart of currently logged user");
+		
 		HttpHeaders httpHeaders=new HttpHeaders();
 		httpHeaders.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<ShoppingCart> httpEntity=new HttpEntity<>(httpHeaders);
@@ -78,21 +85,23 @@ public class EmailServiceImpl implements EmailService{
 		
 		List<CartItem> listOfItems=shoppingCart.getCartItem();
 		listOfItems.forEach(item -> {item.setShoppingCart(shoppingCart);});
+		OutputStream out;
 		byte[] reportData = null;
 		try {
 			JasperPrint jasperPrint = JasperFillManager.fillReport("src/main/resources/OrderReport.jasper", new HashMap<String, Object>(), new JRBeanCollectionDataSource(listOfItems));
 			
 			reportData = JasperExportManager.exportReportToPdf(jasperPrint);
-			OutputStream out;
+			
 			File tempPdf=File.createTempFile(shoppingCart.getUsername()+"-Report", ".pdf");
 			out = new FileOutputStream(tempPdf);
 			out.write(reportData);
 			out.close();
 			sendMailWithPDF(recipient, tempPdf);
 			tempPdf.delete();
-			
+			logger.info("Jasper report was created and the email was sent");
 		} catch (JRException | IOException e) {
 			// TODO Auto-generated catch block
+			logger.error("OrderServiceImpl: Error in sendPDFReport method");
 			e.printStackTrace();
 		}
 	}
@@ -117,6 +126,7 @@ public class EmailServiceImpl implements EmailService{
 		    helper.addAttachment(file.getFilename(), file);
 		    helper.setText("");
 		} catch (Exception e) {
+			logger.error("Error in sendMailWithPDF method");
 			 System.err.println(e.getMessage());
 		}
 		javaMailSender.send(message);

@@ -23,7 +23,7 @@ spring:
        hibernate: 
          show_sql: true
          use_sql_comments: true
-         format_sql: true
+         format_sql: true 
             
 security:
   oauth2:
@@ -41,8 +41,11 @@ security:
        
 
 logging:
-  level:
-    org:
-      hibernate:
-        type: trace
+  file: 
+    name: C:\ELK\logs\microservice-app.log
+#  level:
+ #   org:
+  #    hibernate:
+   #     type: trace
+  
         

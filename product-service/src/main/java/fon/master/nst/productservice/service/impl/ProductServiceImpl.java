@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductRepository productRepository;
 	
+	private Logger logger=LoggerFactory.getLogger(ProductService.class);
 	
 	public List<Product> findAllProducts() {
 		return productRepository.findAll();
@@ -29,9 +32,10 @@ public class ProductServiceImpl implements ProductService {
 		List<Product> listOfProductsByGroupName=productRepository.findByProductGroupName(name);
 		
 		if(listOfProductsByGroupName.isEmpty()) {
+			logger.error("Invalid group name!");
 			throw new ProductGroupException("Invalid group name!");
 		}
-		
+		logger.info("List of products was showed");
 		return listOfProductsByGroupName;
 	}
 

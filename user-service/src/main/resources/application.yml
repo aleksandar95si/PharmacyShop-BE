@@ -21,7 +21,10 @@ spring:
          format_sql: true
 
 logging:
-  level:
-    org:
-      hibernate:
-        type: trace
+  file: 
+    name: C:\ELK\logs\microservice-app.log
+ # level:
+  #  org:
+   #   hibernate:
+    #    type: trace
+  

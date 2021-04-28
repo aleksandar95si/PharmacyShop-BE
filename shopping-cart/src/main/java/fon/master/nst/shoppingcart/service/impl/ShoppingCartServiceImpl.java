@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +34,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 	@Autowired
 	private CurrentLoggedInUserService currentLoggedInUserService;
 	
+	private Logger logger=LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
+	
 	public void addItem(Long productId) {
 		
 	// 1) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
@@ -40,9 +44,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		if(currShopCart==null) {
 			currShopCart=new ShoppingCart(currentLoggedInUserService.getCurrentUser()); 		
 			currShopCart.setBill(0L);
+			logger.info("Shopping cart created for user: "+currentLoggedInUserService.getCurrentUser());
 		}
 	
 	// 2) Pronadji proizvod
+		logger.info("Shopping cart microservice calls Product microservice to get product by product ID");
 		HttpHeaders httpHeader=new HttpHeaders();
 		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
 		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
@@ -55,15 +61,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		cartItem.setProductId(currProd.getProductId());
 		cartItem.setProductName(currProd.getName());
 		cartItem.setPrice(currProd.getPrice());
-	
+		
 	// 4) Dodati item u listu Item-a korpe
 		List<CartItem> lista=new ArrayList<>();
 		lista.add(cartItem);
+		logger.info("Added item: {}", cartItem);
 		currShopCart.setCartItem(lista);
 		currShopCart.setBill(currShopCart.getBill()+cartItem.getPrice());
 
 	// 5) Sacuvati ShoppingCart
 		shoppingCartRepository.save(currShopCart);		
+		logger.info("Shopping cart updated");
 	}
 
 	public ShoppingCart getShoppingCart() {
@@ -78,7 +86,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		} else {
 			cart.setBill(cart.getBill()-item.getPrice());
 		}
-		cartItemRepository.deleteById(itemId);		
+		cartItemRepository.deleteById(itemId);	
+		logger.info("Cart item deleted");
 	}
 	
 	public void deleteCart(Long cartId) {
