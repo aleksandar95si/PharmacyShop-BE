@@ -87,6 +87,23 @@ public class ShoppingCart implements Serializable {
 		return "ShoppingCart [cartId=" + cartId + ", username=" + username + ", cartItem=" + cartItem.size() + "]";
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ShoppingCart other = (ShoppingCart) obj;
+		if (cartId == null) {
+			if (other.cartId != null)
+				return false;
+		} else if (!cartId.equals(other.cartId))
+			return false;
+		return true;
+	}
+	
 	
 	
 	

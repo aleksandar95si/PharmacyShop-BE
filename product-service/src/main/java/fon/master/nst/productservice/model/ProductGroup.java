@@ -49,6 +49,16 @@ public class ProductGroup implements Serializable{
 	public void setGroupImgPath(String groupImgPath) {
 		this.groupImgPath = groupImgPath;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		ProductGroup productGroup=(ProductGroup) obj;
+		if(groupId==productGroup.getGroupId()) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	
 }

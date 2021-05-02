@@ -42,8 +42,8 @@ public class ProductController {
 	
 	@GetMapping("/group/{name}")
 	public @ResponseBody ResponseEntity<List<Product>> getProductsByGroupName(@PathVariable("name") String name) {
+		logger.info("Clicked on group name: "+name);
 		try {
-			logger.info("Clicked on group name: "+name);
 			return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.getAllProductsByGroupName(name));
 		} catch (ProductGroupException e) {
 			// TODO Auto-generated catch block
@@ -60,9 +60,8 @@ public class ProductController {
 	@GetMapping("/group/all")
 	public ResponseEntity<List<ProductGroup>> getAllGroups() {
 		try {
-			
 			return ResponseEntity.status(HttpStatus.OK).body(productGroupServiceImpl.getAllGroups());
-		} catch (Exception e) {
+		} catch (ProductGroupException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}
@@ -77,7 +76,7 @@ public class ProductController {
 	public ResponseEntity<ProductGroup> findGroupByName(@PathVariable("name") String name) {
 		try {
 			return ResponseEntity.status(HttpStatus.OK).body(productGroupServiceImpl.findByName(name));
-		} catch (Exception e) {
+		} catch (ProductGroupException e) {
 			 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
 	}

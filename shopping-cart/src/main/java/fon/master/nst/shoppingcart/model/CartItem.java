@@ -92,6 +92,24 @@ public class CartItem implements Serializable {
 		return "CartItem [itemId=" + itemId + ", productId=" + productId + ", shoppingCart=" + shoppingCart.toString() + "]";
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CartItem other = (CartItem) obj;
+		if (itemId == null) {
+			if (other.itemId != null)
+				return false;
+		} else if (!itemId.equals(other.itemId))
+			return false;
+		return true;
+	}
+
+	
  
 	
 	
