@@ -63,10 +63,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		cartItem.setPrice(currProd.getPrice());
 		
 	// 4) Dodati item u listu Item-a korpe
-		List<CartItem> lista=new ArrayList<>();
-		lista.add(cartItem);
+		//List<CartItem> lista=new ArrayList<>();
+		List<CartItem> listOfItems=currShopCart.getCartItem();
+		listOfItems.add(cartItem);
 		logger.info("Added item: {}", cartItem);
-		currShopCart.setCartItem(lista);
+		currShopCart.setCartItem(listOfItems);
 		currShopCart.setBill(currShopCart.getBill()+cartItem.getPrice());
 
 	// 5) Sacuvati ShoppingCart

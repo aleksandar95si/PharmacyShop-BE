@@ -38,7 +38,7 @@ public class ProductGroupServiceImpl implements ProductGroupService {
 		
 		List<ProductGroup> listOfAllGroups=productGroupRepository.findAll();
 		
-		if(listOfAllGroups.isEmpty()) {
+		if(listOfAllGroups==null || listOfAllGroups.isEmpty()) {
 			throw new ProductGroupException("Group not found");
 		}
 		

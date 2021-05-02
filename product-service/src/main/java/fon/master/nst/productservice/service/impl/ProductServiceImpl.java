@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		List<Product> listOfProductsByGroupName=productRepository.findByProductGroupName(name);
 		
-		if(listOfProductsByGroupName.isEmpty()) {
+		if(listOfProductsByGroupName==null || listOfProductsByGroupName.isEmpty()) {
 			logger.error("Invalid group name!");
 			throw new ProductGroupException("Invalid group name!");
 		}
