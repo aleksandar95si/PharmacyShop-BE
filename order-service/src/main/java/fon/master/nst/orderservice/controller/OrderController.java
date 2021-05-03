@@ -18,26 +18,12 @@ public class OrderController {
 	@Autowired
 	private EmailServiceImpl emailServiceImpl;
 	
-	private Logger logger=LoggerFactory.getLogger(OrderController.class);
-	
-	/*
-	@PostMapping("/submit/{recipient}")
-	public void getOrderItemsAndSendEmail(@PathVariable("recipient") String recipient) {
-		emailService.getOrderItemsAndSendEmail(recipient);
-	}
-	*/
-	/*
-	@PostMapping("/submit")
-	public ResponseEntity getOrderItemsAndSendEmail() {
-		emailServiceImpl.getOrderItemsAndSendEmail("a.risticc95@gmail.com"); //hardkotovati mejl primaoca radi testiranja
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
-	} */
-	
+	private Logger logger=LoggerFactory.getLogger(OrderController.class);	
 
 	@PostMapping("/submit")
 	public ResponseEntity getOrderItemsAndSendEmail() {
 		logger.info("User clicked on getOrderItemsAndSendEmail method");
-		emailServiceImpl.sendPDFReport("a.risticc95@gmail.com"); //hardkotovati mejl primaoca radi testiranja
+		emailServiceImpl.sendPDFReport(""); //hardkotovati mejl primaoca radi testiranja
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 }
