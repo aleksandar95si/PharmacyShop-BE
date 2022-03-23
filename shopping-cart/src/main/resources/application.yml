@@ -15,7 +15,6 @@ spring:
        driver-class-name: com.mysql.jdbc.Driver
    jpa:
      hibernate:
-      
        naming:
          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -36,16 +35,10 @@ security:
       auto-approve-scopes: '.*'
     resource:
       token-info-uri: http://localhost:8282/oauth/check_token
-     
-
-       
 
 logging:
   file: 
     name: C:\ELK\logs\microservice-app.log
-#  level:
- #   org:
-  #    hibernate:
-   #     type: trace
+
   
         

@@ -1,5 +1,6 @@
 package fon.master.nst.shoppingcart.service.impl;
 
+import fon.master.nst.shoppingcart.client.ProductClient;
 import fon.master.nst.shoppingcart.dto.Product;
 import fon.master.nst.shoppingcart.model.CartItem;
 import fon.master.nst.shoppingcart.model.ShoppingCart;
@@ -9,12 +10,7 @@ import fon.master.nst.shoppingcart.service.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -28,11 +24,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private CartItemRepository cartItemRepository;
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private CurrentLoggedInUserService currentLoggedInUserService;
+    @Autowired
+    private ProductClient productClient;
 
-    private Logger logger = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
 
     public void addItem(Long productId) {
 
@@ -46,13 +42,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         // 2) Pronadji proizvod
-        logger.info("Shopping cart microservice calls Product microservice to get product by product ID");
-        HttpHeaders httpHeader = new HttpHeaders();
-        httpHeader.add("Authorization", AccessTokenService.getAccessToken());
-        HttpEntity<Product> productEntity = new HttpEntity<>(httpHeader);
-        ResponseEntity<Product> responseEntity = restTemplate.exchange("http://PRODUCT-SERVICE/products/" + productId,
-                HttpMethod.GET, productEntity, Product.class);
-        Product currProd = responseEntity.getBody();
+
+        Product currProd = productClient.getProduct(AccessTokenService.getAccessToken(), productId);
 
         // 3) Napraviti novi CartItem, dodeliti mu ID proizvoda i ime i povezati sa Cart-om
         CartItem cartItem = new CartItem(currShopCart);
@@ -61,7 +52,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartItem.setPrice(currProd.getPrice());
 
         // 4) Dodati item u listu Item-a korpe
-        //List<CartItem> lista=new ArrayList<>();
         List<CartItem> listOfItems = currShopCart.getCartItem();
         listOfItems.add(cartItem);
         logger.info("Added item: {}", cartItem);

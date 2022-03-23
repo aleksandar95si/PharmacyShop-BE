@@ -50,7 +50,7 @@ public class ShoppingCart implements Serializable {
         this.bill = bill;
     }
 
-    public List<CartItem> getCartItem() {
+    public List<CartItem> getCartItems() {
         return cartItem;
     }
 
