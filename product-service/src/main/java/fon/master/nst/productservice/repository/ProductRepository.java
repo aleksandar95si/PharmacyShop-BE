@@ -9,7 +9,10 @@ import org.springframework.stereotype.Repository;
 import fon.master.nst.productservice.model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>{
-	List<Product> findByProductGroupName(String name);
-	Product findByProductId(Long productId);
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    List<Product> findByProductGroupName(String name);
+
+    Product findByProductId(Long productId);
+
 }

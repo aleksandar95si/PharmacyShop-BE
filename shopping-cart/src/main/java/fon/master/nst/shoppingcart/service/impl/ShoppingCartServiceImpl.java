@@ -1,10 +1,11 @@
 package fon.master.nst.shoppingcart.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.transaction.Transactional;
-
+import fon.master.nst.shoppingcart.dto.Product;
+import fon.master.nst.shoppingcart.model.CartItem;
+import fon.master.nst.shoppingcart.model.ShoppingCart;
+import fon.master.nst.shoppingcart.repository.CartItemRepository;
+import fon.master.nst.shoppingcart.repository.ShoppingCartRepository;
+import fon.master.nst.shoppingcart.service.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,92 +15,95 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import fon.master.nst.shoppingcart.dto.Product;
-import fon.master.nst.shoppingcart.model.CartItem;
-import fon.master.nst.shoppingcart.model.ShoppingCart;
-import fon.master.nst.shoppingcart.repository.CartItemRepository;
-import fon.master.nst.shoppingcart.repository.ShoppingCartRepository;
-import fon.master.nst.shoppingcart.service.ShoppingCartService;
+
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 public class ShoppingCartServiceImpl implements ShoppingCartService {
-	
-	@Autowired
-	private ShoppingCartRepository shoppingCartRepository;
-	@Autowired
-	private CartItemRepository cartItemRepository;
-	@Autowired
-	private RestTemplate restTemplate;
-	@Autowired
-	private CurrentLoggedInUserService currentLoggedInUserService;
-	
-	private Logger logger=LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
-	
-	public void addItem(Long productId) {
-		
-	// 1) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
-		ShoppingCart currShopCart;
-		currShopCart=getShoppingCart();
-		if(currShopCart==null) {
-			currShopCart=new ShoppingCart(currentLoggedInUserService.getCurrentUser()); 		
-			currShopCart.setBill(0L);
-			logger.info("Shopping cart created for user: "+currentLoggedInUserService.getCurrentUser());
-		}
-	
-	// 2) Pronadji proizvod
-		logger.info("Shopping cart microservice calls Product microservice to get product by product ID");
-		HttpHeaders httpHeader=new HttpHeaders();
-		httpHeader.add("Authorization", AccesTokenService.getAccesToken());
-		HttpEntity<Product> productEntity=new HttpEntity<>(httpHeader);
-		ResponseEntity<Product> responseEntity=restTemplate.exchange("http://PRODUCT-SERVICE/products/"+productId,
-																	HttpMethod.GET, productEntity, Product.class);
-		Product currProd=responseEntity.getBody();
-		
-	// 3) Napraviti novi CartItem, dodeliti mu ID proizvoda i ime i povezati sa Cart-om 
-		CartItem cartItem=new CartItem(currShopCart);
-		cartItem.setProductId(currProd.getProductId());
-		cartItem.setProductName(currProd.getName());
-		cartItem.setPrice(currProd.getPrice());
-		
-	// 4) Dodati item u listu Item-a korpe
-		//List<CartItem> lista=new ArrayList<>();
-		List<CartItem> listOfItems=currShopCart.getCartItem();
-		listOfItems.add(cartItem);
-		logger.info("Added item: {}", cartItem);
-		currShopCart.setCartItem(listOfItems);
-		currShopCart.setBill(currShopCart.getBill()+cartItem.getPrice());
 
-	// 5) Sacuvati ShoppingCart
-		shoppingCartRepository.save(currShopCart);		
-		logger.info("Shopping cart updated");
-	}
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
+    @Autowired
+    private CartItemRepository cartItemRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private CurrentLoggedInUserService currentLoggedInUserService;
 
-	public ShoppingCart getShoppingCart() {
-		return shoppingCartRepository.findByUsername(currentLoggedInUserService.getCurrentUser());
-	}
-	
-	public void removeCartItem(Long itemId) {
-		CartItem item=cartItemRepository.findByItemId(itemId);
-		ShoppingCart cart=shoppingCartRepository.findByCartItemItemId(item.getItemId());
-		if(cart.getBill()-item.getPrice()<0) {
-			cart.setBill(0L);
-		} else {
-			cart.setBill(cart.getBill()-item.getPrice());
-		}
-		cartItemRepository.deleteById(itemId);	
-		logger.info("Cart item deleted");
-	}
-	
-	public void deleteCart(Long cartId) {
-		shoppingCartRepository.deleteById(cartId);
-	}
-	
-	public ShoppingCart getCartById(Long cartId) {
-		return shoppingCartRepository.findByCartId(cartId);
-	}
+    private Logger logger = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
 
-	public CartItem getItem(Long cartId) {
-		return cartItemRepository.findByItemId(cartId);
-	}
+    public void addItem(Long productId) {
+
+        // 1) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
+        ShoppingCart currShopCart;
+        currShopCart = getShoppingCart();
+        if (currShopCart == null) {
+            currShopCart = new ShoppingCart(currentLoggedInUserService.getCurrentUser());
+            currShopCart.setBill(0L);
+            logger.info("Shopping cart created for user: " + currentLoggedInUserService.getCurrentUser());
+        }
+
+        // 2) Pronadji proizvod
+        logger.info("Shopping cart microservice calls Product microservice to get product by product ID");
+        HttpHeaders httpHeader = new HttpHeaders();
+        httpHeader.add("Authorization", AccessTokenService.getAccessToken());
+        HttpEntity<Product> productEntity = new HttpEntity<>(httpHeader);
+        ResponseEntity<Product> responseEntity = restTemplate.exchange("http://PRODUCT-SERVICE/products/" + productId,
+                HttpMethod.GET, productEntity, Product.class);
+        Product currProd = responseEntity.getBody();
+
+        // 3) Napraviti novi CartItem, dodeliti mu ID proizvoda i ime i povezati sa Cart-om
+        CartItem cartItem = new CartItem(currShopCart);
+        cartItem.setProductId(currProd.getProductId());
+        cartItem.setProductName(currProd.getName());
+        cartItem.setPrice(currProd.getPrice());
+
+        // 4) Dodati item u listu Item-a korpe
+        //List<CartItem> lista=new ArrayList<>();
+        List<CartItem> listOfItems = currShopCart.getCartItem();
+        listOfItems.add(cartItem);
+        logger.info("Added item: {}", cartItem);
+        currShopCart.setCartItem(listOfItems);
+        currShopCart.setBill(currShopCart.getBill() + cartItem.getPrice());
+
+        // 5) Sacuvati ShoppingCart
+        shoppingCartRepository.save(currShopCart);
+        logger.info("Shopping cart updated");
+    }
+
+    public ShoppingCart getShoppingCart() {
+        return shoppingCartRepository.findByUsername(currentLoggedInUserService.getCurrentUser());
+    }
+
+    public void removeCartItem(Long itemId) {
+
+        CartItem item = cartItemRepository.findByItemId(itemId);
+
+        ShoppingCart cart = shoppingCartRepository.findByCartItemItemId(item.getItemId());
+
+        if (cart.getBill() - item.getPrice() < 0) {
+            cart.setBill(0L);
+        } else {
+            cart.setBill(cart.getBill() - item.getPrice());
+        }
+
+        cartItemRepository.deleteById(itemId);
+
+        logger.info("Cart item deleted");
+    }
+
+    public void deleteCart(Long cartId) {
+        shoppingCartRepository.deleteById(cartId);
+    }
+
+    public ShoppingCart getCartById(Long cartId) {
+        return shoppingCartRepository.findByCartId(cartId);
+    }
+
+    public CartItem getItem(Long cartId) {
+        return cartItemRepository.findByItemId(cartId);
+    }
+
 }

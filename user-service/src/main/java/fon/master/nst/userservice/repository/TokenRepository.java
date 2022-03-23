@@ -6,6 +6,8 @@ import org.springframework.stereotype.Repository;
 import fon.master.nst.userservice.model.Token;
 
 @Repository
-public interface TokenRepository extends JpaRepository<Token, String>{
-	void deleteByUsername(String username);
+public interface TokenRepository extends JpaRepository<Token, String> {
+
+    void deleteByUsername(String username);
+
 }

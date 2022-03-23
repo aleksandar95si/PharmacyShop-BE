@@ -15,33 +15,33 @@ import fon.master.nst.productservice.service.ProductGroupService;
 @Service
 @Transactional
 public class ProductGroupServiceImpl implements ProductGroupService {
-	
-	@Autowired
-	private ProductGroupRepository productGroupRepository;
-	
-	public void addProductGroup(ProductGroup productGroup) {
-		productGroupRepository.save(productGroup);
-	}
-	
-	public ProductGroup findByName(String name) throws ProductGroupException {
-		
-		ProductGroup productGroup=productGroupRepository.findByName(name);
-		
-		if(productGroup==null) {
-			throw new ProductGroupException("Invalid group name");
-		}
-		
-		return productGroup;
-	}
-	
-	public List<ProductGroup> getAllGroups() throws ProductGroupException {
-		
-		List<ProductGroup> listOfAllGroups=productGroupRepository.findAll();
-		
-		if(listOfAllGroups==null || listOfAllGroups.isEmpty()) {
-			throw new ProductGroupException("Group not found");
-		}
-		
-		return listOfAllGroups;
-	}
+
+    @Autowired
+    private ProductGroupRepository productGroupRepository;
+
+    public void addProductGroup(ProductGroup productGroup) {
+        productGroupRepository.save(productGroup);
+    }
+
+    public ProductGroup findByName(String name) throws ProductGroupException {
+
+        ProductGroup productGroup = productGroupRepository.findByName(name);
+
+        if (productGroup == null) {
+            throw new ProductGroupException("Invalid group name");
+        }
+
+        return productGroup;
+    }
+
+    public List<ProductGroup> getAllGroups() throws ProductGroupException {
+
+        List<ProductGroup> listOfAllGroups = productGroupRepository.findAll();
+
+        if (listOfAllGroups == null || listOfAllGroups.isEmpty()) {
+            throw new ProductGroupException("Group not found");
+        }
+
+        return listOfAllGroups;
+    }
 }

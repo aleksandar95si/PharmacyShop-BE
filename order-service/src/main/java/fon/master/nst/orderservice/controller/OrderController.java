@@ -15,15 +15,15 @@ import fon.master.nst.orderservice.service.impl.EmailServiceImpl;
 @RequestMapping("/order")
 public class OrderController {
 
-	@Autowired
-	private EmailServiceImpl emailServiceImpl;
-	
-	private Logger logger=LoggerFactory.getLogger(OrderController.class);	
+    @Autowired
+    private EmailServiceImpl emailServiceImpl;
 
-	@PostMapping("/submit")
-	public ResponseEntity getOrderItemsAndSendEmail() {
-		logger.info("User clicked on getOrderItemsAndSendEmail method");
-		emailServiceImpl.sendPDFReport(""); //hardkotovati mejl primaoca radi testiranja
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
-	}
+    private Logger logger = LoggerFactory.getLogger(OrderController.class);
+
+    @PostMapping("/submit")
+    public ResponseEntity getOrderItemsAndSendEmail() {
+        logger.info("User clicked on getOrderItemsAndSendEmail method");
+        emailServiceImpl.sendPDFReport(""); //hardkotovati mejl primaoca radi testiranja
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }

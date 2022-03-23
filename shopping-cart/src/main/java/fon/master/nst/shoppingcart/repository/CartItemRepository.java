@@ -6,8 +6,6 @@ import fon.master.nst.shoppingcart.model.CartItem;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
-	//@Override
-	//CartItem findById(Long cartId);
-	
-	CartItem findByItemId(Long itemId);
+    CartItem findByItemId(Long itemId);
+
 }

@@ -15,22 +15,22 @@ import org.springframework.web.client.RestTemplate;
 @EnableResourceServer
 public class OrderServiceApplication {
 
-	@Bean
-	@LoadBalanced
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}
-	
-	@Primary
-	@Bean
-	public FreeMarkerConfigurationFactoryBean factoryBean() {
-		FreeMarkerConfigurationFactoryBean freeMarkerBean=new FreeMarkerConfigurationFactoryBean();
-		freeMarkerBean.setTemplateLoaderPath("");
-		return freeMarkerBean;
-	}
-	
-	public static void main(String[] args) {
-		SpringApplication.run(OrderServiceApplication.class, args);
-	}
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+    @Primary
+    @Bean
+    public FreeMarkerConfigurationFactoryBean factoryBean() {
+        FreeMarkerConfigurationFactoryBean freeMarkerBean = new FreeMarkerConfigurationFactoryBean();
+        freeMarkerBean.setTemplateLoaderPath("");
+        return freeMarkerBean;
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(OrderServiceApplication.class, args);
+    }
 
 }

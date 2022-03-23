@@ -1,7 +1,6 @@
 package fon.master.nst.oauthserver.config;
 
 
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,36 +18,36 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 @Configuration
 public class AuthorizationServerConfig implements AuthorizationServerConfigurer {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-	
-	@Autowired
-	private DataSource dataSource;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-	@Autowired
-	private AuthenticationManager authenticationManager;
+    @Autowired
+    private DataSource dataSource;
 
-	@Bean
-	public TokenStore getTokenStore() {
-		return new JdbcTokenStore(dataSource);
-	}
-	
-	@Override
-	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-		security.checkTokenAccess("isAuthenticated()").tokenKeyAccess("permitAll");
-	}
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Override
-	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-	    clients
-	    		.jdbc(dataSource)
-		        .passwordEncoder(passwordEncoder);
-	}
+    @Bean
+    public TokenStore getTokenStore() {
+        return new JdbcTokenStore(dataSource);
+    }
 
-	@Override
-	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(getTokenStore());
-		endpoints.authenticationManager(authenticationManager);
-	}
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+        security.checkTokenAccess("isAuthenticated()").tokenKeyAccess("permitAll");
+    }
+
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients
+                .jdbc(dataSource)
+                .passwordEncoder(passwordEncoder);
+    }
+
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.tokenStore(getTokenStore());
+        endpoints.authenticationManager(authenticationManager);
+    }
 
 }

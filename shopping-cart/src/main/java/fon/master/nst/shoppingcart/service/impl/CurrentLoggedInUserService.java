@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class CurrentLoggedInUserService {
 
-public String getCurrentUser() {
-		 return SecurityContextHolder.getContext().getAuthentication().getName();
-	}
-	
+    public String getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
 }

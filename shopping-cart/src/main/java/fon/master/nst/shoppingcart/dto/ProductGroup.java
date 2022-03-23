@@ -2,54 +2,45 @@ package fon.master.nst.shoppingcart.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+
+public class ProductGroup implements Serializable {
 
 
-public class ProductGroup implements Serializable{
-	
+    private Long groupId;
+    private String name;
+    private String groupImgPath;
 
-	private Long groupId;
-	private String name;
-	private String groupImgPath;
-	
-	public ProductGroup() {
-		
-	}
+    public ProductGroup() {
 
-	public Long getGroupId() {
-		return groupId;
-	}
+    }
 
-	public void setGroupId(Long groupId) {
-		this.groupId = groupId;
-	}
+    public Long getGroupId() {
+        return groupId;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getGroupImgPath() {
-		return groupImgPath;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setGroupImgPath(String groupImgPath) {
-		this.groupImgPath = groupImgPath;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Override
-	public String toString() {
-		return "ProductGroup [groupId=" + groupId + ", name=" + name + "]";
-	}
-	
-	
+    public String getGroupImgPath() {
+        return groupImgPath;
+    }
+
+    public void setGroupImgPath(String groupImgPath) {
+        this.groupImgPath = groupImgPath;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductGroup [groupId=" + groupId + ", name=" + name + "]";
+    }
+
 }

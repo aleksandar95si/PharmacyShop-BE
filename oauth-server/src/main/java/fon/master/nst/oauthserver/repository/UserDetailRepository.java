@@ -9,7 +9,7 @@ import fon.master.nst.oauthserver.model.User;
 
 @Repository
 public interface UserDetailRepository extends JpaRepository<User, Integer> {
-	
-	Optional<User> findByUsername(String username);
-	
+
+    Optional<User> findByUsername(String username);
+
 }

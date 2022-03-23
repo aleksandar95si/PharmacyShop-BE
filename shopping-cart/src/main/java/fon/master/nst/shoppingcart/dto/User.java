@@ -2,9 +2,6 @@ package fon.master.nst.shoppingcart.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-
-
 public class User implements Serializable {
 
 	private Long userId;
@@ -16,7 +13,5 @@ public class User implements Serializable {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
-	
-	
-	
+
 }

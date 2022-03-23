@@ -12,23 +12,23 @@ import fon.master.nst.shoppingcart.model.ShoppingCart;
 @SpringBootTest
 class CartItemRepositoryTest {
 
-	@Autowired
-	private CartItemRepository cartItemRepository;
-	@Autowired
-	private ShoppingCartRepository shoppingCartRepository;
-	
-	@Test
-	void testFindByItemId() {
-		ShoppingCart testShoppingCart=new ShoppingCart("testUser");
+    @Autowired
+    private CartItemRepository cartItemRepository;
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
-		CartItem testCartItem=new CartItem(testShoppingCart);
-		testShoppingCart.getCartItem().add(testCartItem);
-		
-		shoppingCartRepository.save(testShoppingCart);
-		
-		CartItem cartItemResult=cartItemRepository.findByItemId(testCartItem.getItemId());
-		
-		assertEquals(testCartItem, cartItemResult);
-	}
+    @Test
+    void testFindByItemId() {
+        ShoppingCart testShoppingCart = new ShoppingCart("testUser");
+
+        CartItem testCartItem = new CartItem(testShoppingCart);
+        testShoppingCart.getCartItem().add(testCartItem);
+
+        shoppingCartRepository.save(testShoppingCart);
+
+        CartItem cartItemResult = cartItemRepository.findByItemId(testCartItem.getItemId());
+
+        assertEquals(testCartItem, cartItemResult);
+    }
 
 }

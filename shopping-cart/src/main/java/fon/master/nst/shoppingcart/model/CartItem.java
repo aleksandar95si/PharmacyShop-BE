@@ -12,105 +12,99 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;;
 
 
 @Entity
-@Table(name="cart_item")
+@Table(name = "cart_item")
 public class CartItem implements Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="item_id")
-	private Long itemId;
-	@Column(name="product_id")
-	private Long productId;
-	@Column(name="product_name")
-	private String productName;
-	@Column(name="price")
-	private Long price;
-	
-	@JoinColumn(name = "cart_id")
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonBackReference
-	private ShoppingCart shoppingCart;
-	
-	public CartItem() {
-		super();
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
+    private Long itemId;
+    @Column(name = "product_id")
+    private Long productId;
+    @Column(name = "product_name")
+    private String productName;
+    @Column(name = "price")
+    private Long price;
 
-	public CartItem(ShoppingCart shoppingCart) {
-		super();
-		this.shoppingCart = shoppingCart;
-	}
+    @JoinColumn(name = "cart_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonBackReference
+    private ShoppingCart shoppingCart;
+
+    public CartItem() {
+        super();
+    }
+
+    public CartItem(ShoppingCart shoppingCart) {
+        super();
+        this.shoppingCart = shoppingCart;
+    }
 
 
-	public Long getItemId() {
-		return itemId;
-	}
+    public Long getItemId() {
+        return itemId;
+    }
 
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 
-	public Long getProductId() {
-		return productId;
-	}
+    public Long getProductId() {
+        return productId;
+    }
 
-	public void setProductId(Long productId) {
-		this.productId = productId;
-	}
-	
-	public String getProductName() {
-		return productName;
-	}
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
+    public String getProductName() {
+        return productName;
+    }
 
-	public Long getPrice() {
-		return price;
-	}
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
 
-	public void setPrice(Long price) {
-		this.price = price;
-	}
+    public Long getPrice() {
+        return price;
+    }
 
-	public ShoppingCart getShoppingCart() {
-		return shoppingCart;
-	}
-	
-	public void setShoppingCart(ShoppingCart shoppingCart) {
-		this.shoppingCart = shoppingCart;
-	}
+    public void setPrice(Long price) {
+        this.price = price;
+    }
 
-	@Override
-	public String toString() {
-		return "CartItem [itemId=" + itemId + ", productId=" + productId + ", shoppingCart=" + shoppingCart.toString() + "]";
-	}
+    public ShoppingCart getShoppingCart() {
+        return shoppingCart;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CartItem other = (CartItem) obj;
-		if (itemId == null) {
-			if (other.itemId != null)
-				return false;
-		} else if (!itemId.equals(other.itemId))
-			return false;
-		return true;
-	}
+    public void setShoppingCart(ShoppingCart shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 
-	
- 
-	
-	
+    @Override
+    public String toString() {
+        return "CartItem [itemId=" + itemId + ", productId=" + productId + ", shoppingCart=" + shoppingCart.toString() + "]";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        CartItem other = (CartItem) obj;
+        if (itemId == null) {
+            if (other.itemId != null)
+                return false;
+        } else if (!itemId.equals(other.itemId))
+            return false;
+        return true;
+    }
+
 }

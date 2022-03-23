@@ -18,7 +18,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class EmailServiceImpl implements EmailService{
 		logger.info("Order microservice calls Shopping cart microservice to get shopping cart of currently logged user");
 		
 		HttpHeaders httpHeaders=new HttpHeaders();
-		httpHeaders.add("Authorization", AccesTokenService.getAccesToken());
+		httpHeaders.add("Authorization", AccessTokenService.getAccessToken());
 		HttpEntity<ShoppingCart> httpEntity=new HttpEntity<>(httpHeaders);
 		ResponseEntity<ShoppingCart> responseEntity=restTemplate.exchange("http://SHOPPING-CART/cart/get", HttpMethod.GET, httpEntity, ShoppingCart.class);
 		

@@ -11,17 +11,17 @@ import fon.master.nst.productservice.model.ProductGroup;
 @SpringBootTest
 class ProductGroupRepositoryTest {
 
-	@Autowired
-	private ProductGroupRepository productGroupRepository;
-	
-	@Test
-	void testFindByName() {
-		ProductGroup testProductGroup=new ProductGroup();
-		testProductGroup.setGroupId(1L);
-		testProductGroup.setName("testGroupName");
-		testProductGroup.setGroupImgPath("");
-		productGroupRepository.save(testProductGroup);
-		ProductGroup productGroupResult=productGroupRepository.findByName("testGroupName");
-		assertEquals(testProductGroup, productGroupResult);
-	}
+    @Autowired
+    private ProductGroupRepository productGroupRepository;
+
+    @Test
+    void testFindByName() {
+        ProductGroup testProductGroup = new ProductGroup();
+        testProductGroup.setGroupId(1L);
+        testProductGroup.setName("testGroupName");
+        testProductGroup.setGroupImgPath("");
+        productGroupRepository.save(testProductGroup);
+        ProductGroup productGroupResult = productGroupRepository.findByName("testGroupName");
+        assertEquals(testProductGroup, productGroupResult);
+    }
 }

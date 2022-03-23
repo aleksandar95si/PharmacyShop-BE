@@ -16,20 +16,21 @@ import fon.master.nst.oauthserver.repository.UserDetailRepository;
 @Service("userDetailsService")
 public class UserDetailsServiceImp implements UserDetailsService {
 
-	@Autowired
-	private UserDetailRepository userDetailRepository;
-	
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<User> optionalUser=userDetailRepository.findByUsername(username);
-		
-		optionalUser.orElseThrow(() -> new UsernameNotFoundException("Wrong username or password"));
-		
-		UserDetails userDetails=new AuthUserDetail(optionalUser.get());
-		
-		new AccountStatusUserDetailsChecker().check(userDetails);
-		
-		return userDetails;
-	}
+    @Autowired
+    private UserDetailRepository userDetailRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<User> optionalUser = userDetailRepository.findByUsername(username);
+
+        optionalUser.orElseThrow(() -> new UsernameNotFoundException("Wrong username or password"));
+
+        UserDetails userDetails = new AuthUserDetail(optionalUser.get());
+
+        new AccountStatusUserDetailsChecker().check(userDetails);
+
+        return userDetails;
+    }
 
 }

@@ -8,62 +8,63 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="oauth_access_token")
+@Table(name = "oauth_access_token")
 public class Token implements Serializable {
 
-	@Id
-	@Column(name="token_id")
-	private String tokenId;
-	
-	@Column(name="authentication_id")
-	private String authenticationId;
-	
-	@Column(name="user_name")
-	private String username;
-	
-	@Column(name="client_id")
-	private String clientId;
-	
-	@Column(name="refresh_token")
-	private String refreshToken;
+    @Id
+    @Column(name = "token_id")
+    private String tokenId;
 
-	public String getTokenId() {
-		return tokenId;
-	}
+    @Column(name = "authentication_id")
+    private String authenticationId;
 
-	public void setTokenId(String tokenId) {
-		this.tokenId = tokenId;
-	}
+    @Column(name = "user_name")
+    private String username;
 
-	public String getAuthenticationId() {
-		return authenticationId;
-	}
+    @Column(name = "client_id")
+    private String clientId;
 
-	public void setAuthenticationId(String authenticationId) {
-		this.authenticationId = authenticationId;
-	}
+    @Column(name = "refresh_token")
+    private String refreshToken;
 
-	public String getUsername() {
-		return username;
-	}
+    public String getTokenId() {
+        return tokenId;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
+    }
 
-	public String getClientId() {
-		return clientId;
-	}
+    public String getAuthenticationId() {
+        return authenticationId;
+    }
 
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
+    public void setAuthenticationId(String authenticationId) {
+        this.authenticationId = authenticationId;
+    }
 
-	public String getRefreshToken() {
-		return refreshToken;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
 }

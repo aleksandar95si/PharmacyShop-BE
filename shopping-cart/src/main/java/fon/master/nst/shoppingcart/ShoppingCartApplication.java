@@ -13,14 +13,14 @@ import org.springframework.web.client.RestTemplate;
 @EnableResourceServer
 public class ShoppingCartApplication {
 
-	@Bean
-	@LoadBalanced
-	public RestTemplate getRestTemplate() {
-		return new RestTemplate();
-	}	
-	
-	public static void main(String[] args) {
-		SpringApplication.run(ShoppingCartApplication.class, args);
-	}
+    @Bean
+    @LoadBalanced
+    public RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(ShoppingCartApplication.class, args);
+    }
 
 }
