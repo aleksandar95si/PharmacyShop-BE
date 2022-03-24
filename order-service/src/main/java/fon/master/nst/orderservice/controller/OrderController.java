@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import fon.master.nst.orderservice.service.impl.EmailServiceImpl;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
     private EmailServiceImpl emailServiceImpl;
 
-    private Logger logger = LoggerFactory.getLogger(OrderController.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @PostMapping("/submit")
     public ResponseEntity getOrderItemsAndSendEmail() {
         logger.info("User clicked on getOrderItemsAndSendEmail method");
         emailServiceImpl.sendPDFReport(""); //hardkotovati mejl primaoca radi testiranja
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

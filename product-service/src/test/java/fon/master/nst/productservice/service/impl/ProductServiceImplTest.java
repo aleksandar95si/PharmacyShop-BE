@@ -6,15 +6,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import fon.master.nst.productservice.exceptions.ProductGroupException;
 import fon.master.nst.productservice.model.Product;
 import fon.master.nst.productservice.model.ProductGroup;
 import fon.master.nst.productservice.repository.ProductRepository;
@@ -29,7 +28,7 @@ class ProductServiceImplTest {
 
 
     @Test
-    void testGetAllProductsByGroupName() throws ProductGroupException {
+    void testGetAllProductsByGroupName() {
         ProductGroup testProductGroup = new ProductGroup();
         testProductGroup.setGroupId(1L);
         testProductGroup.setName("TestGroup");
@@ -61,33 +60,11 @@ class ProductServiceImplTest {
     }
 
     @Test
-    public void testGetAllProductsByGroupNameException1() {
-
-        when(productRepository.findByProductGroupName("wrongGroupName")).thenReturn(null);
-
-        assertThrows(ProductGroupException.class, () -> {
-            productServiceImpl.getAllProductsByGroupName("wrongGroupName");
-        });
-
-    }
-
-    @Test
-    public void testGetAllProductsByGroupNameException2() {
-
-        when(productRepository.findByProductGroupName("emptyGroupName")).thenReturn(Collections.emptyList());
-
-        assertThrows(ProductGroupException.class, () -> {
-            productServiceImpl.getAllProductsByGroupName("emptyGroupName");
-        });
-
-    }
-
-    @Test
     public void testFindByProductId() {
         Product testProduct = new Product();
         testProduct.setProductId(1L);
 
-        when(productRepository.findByProductId(testProduct.getProductId())).thenReturn(testProduct);
+        when(productRepository.findById(testProduct.getProductId())).thenReturn(Optional.of(testProduct));
 
         Product productResult = productServiceImpl.findByProductId(testProduct.getProductId());
 
@@ -100,7 +77,6 @@ class ProductServiceImplTest {
         testProduct.setProductId(1L);
 
         productServiceImpl.addProduct(testProduct);
-        ;
 
         verify(productRepository, times(1)).save(testProduct);
     }

@@ -1,7 +1,5 @@
 package fon.master.nst.productservice.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,25 +10,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 
-import org.junit.jupiter.api.BeforeAll;
+import fon.master.nst.productservice.exception.ApiException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import fon.master.nst.productservice.exceptions.ProductGroupException;
 import fon.master.nst.productservice.model.Product;
 import fon.master.nst.productservice.model.ProductGroup;
 import fon.master.nst.productservice.service.impl.ProductGroupServiceImpl;
@@ -75,7 +72,7 @@ class ProductControllerTest {
 
         when(productServiceImpl.findAllProducts()).thenReturn(List.of(testProduct1, testProduct2));
 
-        mockMvc.perform(get("/products/all"))
+        mockMvc.perform(get("/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].productId", is(1)))
@@ -119,7 +116,7 @@ class ProductControllerTest {
 
     @Test
     void testGetProductsByGroupNameNotFound() throws Exception {
-        when(productServiceImpl.getAllProductsByGroupName("wrongGroupName")).thenThrow(ProductGroupException.class);
+        when(productServiceImpl.getAllProductsByGroupName("wrongGroupName")).thenThrow(new ApiException("Invalid group name!", HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name()));
 
         mockMvc.perform(get("/products/group/wrongGroupName")).andExpect(status().isNotFound());
     }
@@ -138,37 +135,6 @@ class ProductControllerTest {
     }
 
     @Test
-    void testGetAllGroups() throws Exception {
-        ProductGroup testProductGroup1 = new ProductGroup();
-        testProductGroup1.setGroupId(1L);
-        testProductGroup1.setName("testGroupName1");
-
-        ProductGroup testProductGroup2 = new ProductGroup();
-        testProductGroup2.setGroupId(2L);
-        testProductGroup2.setName("testGroupName2");
-
-        when(productGroupServiceImpl.getAllGroups()).thenReturn(List.of(testProductGroup1, testProductGroup2));
-
-        mockMvc.perform(get("/products/group/all"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].groupId", is(1)))
-                .andExpect(jsonPath("$[0].name", is("testGroupName1")))
-                .andExpect(jsonPath("$[1].groupId", is(2)))
-                .andExpect(jsonPath("$[1].name", is("testGroupName2")));
-    }
-
-    @Test
-    void testGetAllGroupsNotFound() throws Exception {
-
-        when(productGroupServiceImpl.getAllGroups()).thenThrow(ProductGroupException.class);
-
-        mockMvc.perform(get("/products/group/all")).andExpect(status().isNotFound());
-    }
-
-    @Test
     void testAddProduct() throws JsonProcessingException, Exception {
         ProductGroup testProductGroup = new ProductGroup();
         testProductGroup.setName("testGroupName");
@@ -183,40 +149,6 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(testProduct)))
                 .andExpect(status().isNoContent());
         verify(productServiceImpl, times(1)).addProduct(testProduct);
-    }
-
-    @Test
-    void testFindGroupByName() throws Exception {
-        ProductGroup testProductGroup = new ProductGroup();
-        testProductGroup.setGroupId(1L);
-        testProductGroup.setName("testGroupName");
-
-        when(productGroupServiceImpl.findByName(testProductGroup.getName())).thenReturn(testProductGroup);
-
-        mockMvc.perform(get("/products/group/get/" + testProductGroup.getName()))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.groupId", is(1)))
-                .andExpect(jsonPath("$.name", is("testGroupName")));
-    }
-
-    @Test
-    void testFindGroupByNameNotFound() throws Exception {
-
-        when(productGroupServiceImpl.findByName("wrongGroupName")).thenThrow(ProductGroupException.class);
-
-        mockMvc.perform(get("/products/group/get/wrongGroupName")).andExpect(status().isNotFound());
-    }
-
-    @Test
-    void testAddGroup() throws JsonProcessingException, Exception {
-        ProductGroup testProductGroup = new ProductGroup();
-        testProductGroup.setName("testGroupName");
-
-        mockMvc.perform(post("/products/group/add").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProductGroup)))
-                .andExpect(status().isNoContent());
-        verify(productGroupServiceImpl, times(1)).addProductGroup(testProductGroup);
     }
 
     @Test

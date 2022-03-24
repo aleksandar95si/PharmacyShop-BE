@@ -1,7 +1,9 @@
 package fon.master.nst.shoppingcart.service.impl;
 
+import feign.FeignException;
 import fon.master.nst.shoppingcart.client.ProductClient;
 import fon.master.nst.shoppingcart.dto.Product;
+import fon.master.nst.shoppingcart.exception.ApiException;
 import fon.master.nst.shoppingcart.model.CartItem;
 import fon.master.nst.shoppingcart.model.ShoppingCart;
 import fon.master.nst.shoppingcart.repository.CartItemRepository;
@@ -10,6 +12,7 @@ import fon.master.nst.shoppingcart.service.ShoppingCartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,9 +35,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     public void addItem(Long productId) {
 
-        // 1) Proveriti da li postoji korpa za datog Usera, ako ne postoji napraviti je
-        ShoppingCart currShopCart;
-        currShopCart = getShoppingCart();
+        // 1) Proveriti da li postoji korpa za ulogovanog Usera, ako ne postoji napraviti je
+        ShoppingCart currShopCart = getShoppingCart();
         if (currShopCart == null) {
             currShopCart = new ShoppingCart(currentLoggedInUserService.getCurrentUser());
             currShopCart.setBill(0L);
@@ -42,8 +44,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         // 2) Pronadji proizvod
-
-        Product currProd = productClient.getProduct(AccessTokenService.getAccessToken(), productId);
+        Product currProd;
+        try {
+            currProd = productClient.getProduct(AccessTokenService.getAccessToken(), productId);
+        } catch (FeignException feignException) {
+            throw new ApiException("Error during fetching products data from products-api.", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.name());
+        }
 
         // 3) Napraviti novi CartItem, dodeliti mu ID proizvoda i ime i povezati sa Cart-om
         CartItem cartItem = new CartItem(currShopCart);
@@ -89,7 +95,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     public ShoppingCart getCartById(Long cartId) {
-        return shoppingCartRepository.findByCartId(cartId);
+        return shoppingCartRepository.findById(cartId)
+                .orElseThrow(() -> new ApiException("", HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name()));
     }
 
     public CartItem getItem(Long cartId) {

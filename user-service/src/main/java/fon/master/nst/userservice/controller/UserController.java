@@ -16,22 +16,22 @@ import fon.master.nst.userservice.model.User;
 import fon.master.nst.userservice.service.impl.UserServiceImpl;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserServiceImpl userServiceImpl;
 
-    private Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostMapping("/save")
+    @PostMapping
     public ResponseEntity addUser(@RequestBody User user) {
         logger.info("Registration of User {}" + user);
         userServiceImpl.addUser(user);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/logout/{username}")
+    @DeleteMapping("/{username}/logout")
     public void logout(@PathVariable("username") String username) {
         logger.info("User " + username + " clicked on logout method");
         userServiceImpl.logout(username);

@@ -13,27 +13,26 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
-@EnableOAuth2Sso
 public class ShoppingCartController {
 
     @Autowired
     private ShoppingCartServiceImpl shoppingCartServiceImpl;
 
-    private Logger logger = LoggerFactory.getLogger(ShoppingCartController.class);
+    private final Logger logger = LoggerFactory.getLogger(ShoppingCartController.class);
 
-    @PostMapping("/addItem/{id}")
-    public ResponseEntity addItem(@PathVariable("id") Long productId) {
-        logger.info("User clicked on addItem method");
-        shoppingCartServiceImpl.addItem(productId);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-
-    @GetMapping("/get")
+    @GetMapping
     public ResponseEntity<ShoppingCart> getShoppingCart() {
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartServiceImpl.getShoppingCart());
     }
 
-    @GetMapping("/item/get/{id}")
+    @PostMapping("/{id}")
+    public ResponseEntity addItem(@PathVariable("id") Long productId) {
+        logger.info("User clicked on addItem method");
+        shoppingCartServiceImpl.addItem(productId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/item/{id}")
     public ResponseEntity<CartItem> getItem(@PathVariable("id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(shoppingCartServiceImpl.getItem(id));
     }

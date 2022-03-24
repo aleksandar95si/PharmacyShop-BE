@@ -1,28 +1,34 @@
 server:
-   port: 8081
-   
-spring:  application:    name: API-GATEWAY
+  port: 8081
+
+spring:
+  application:
+    name: API-GATEWAY
   cloud:
     gateway:
-      globalcors:        cors-configurations:          '[/**]':
+      globalcors:
+        cors-configurations:
+          '[/**]':
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
       routes:
-      - id: PRODUCT-SERVICE
-        uri: lb://PRODUCT-SERVICE
-        predicates:
-        - Path=/products/**      - id: SHOPPING-CART
-        uri: lb://SHOPPING-CART
-        predicates:        - Path=/cart/**
-      - id: ORDER-SERVICE
-        uri: lb://ORDER-SERVICE
-        predicates:
-        - Path=/order/**
-      - id: USER-SERVICE
-        uri: lb://USER-SERVICE
-        predicates:
-        - Path=/user/**
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/products-api/**
+        - id: SHOPPING-CART
+          uri: lb://SHOPPING-CART
+          predicates:
+            - Path=/shopping-carts-api/**
+        - id: ORDER-SERVICE
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/orders-api/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users-api/**
  
             
             

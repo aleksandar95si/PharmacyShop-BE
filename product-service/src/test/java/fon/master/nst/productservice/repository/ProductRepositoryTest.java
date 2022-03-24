@@ -62,12 +62,4 @@ class ProductRepositoryTest {
         assertEquals(testProduct1, productListResult.get(0));
         assertEquals(testProduct2, productListResult.get(1));
     }
-
-    @Test
-    void testFindByProductId() {
-        Product productResult = productRepository.findByProductId(testProduct1.getProductId());
-        assertEquals(testProduct1.getPrice(), productResult.getPrice());
-        assertEquals(testProduct1, productResult);
-    }
-
 }

@@ -1,31 +1,27 @@
 server:
+  servlet:
     servlet:
-     session:
+      context-path: /orders-api
+    session:
       cookie:
         name: KSESSION
-    port: 8085
-    
+  port: 8085
+
 spring:
-   application: 
-     name: ORDER-SERVICE
-   mail:    protocol: smtp
+  application:
+    name: ORDER-SERVICE
+  mail:
+    protocol: smtp
     host: smtp.gmail.com
     port: 587
-    username: nst.mail.sender.test@gmail.com    password: hbissbvxykufxjib
+    username: nst.mail.sender.test@gmail.com
+    password: hbissbvxykufxjib
     properties:
-       mail:
-          smtp:
-            auth: true
-            starttls:
-              enable: true
-         
-logging:
-  file: 
-    name: C:\ELK\logs\microservice-app.log
- # level:
-  #  org:
-   #   hibernate:
-     #   type: trace
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 security:
   oauth2:
@@ -38,6 +34,10 @@ security:
       auto-approve-scopes: '.*'
     resource:
       token-info-uri: http://localhost:8282/oauth/check_token
+
+logging:
+  file:
+    name: C:\ELK\logs\microservice-app.log
       
 
        

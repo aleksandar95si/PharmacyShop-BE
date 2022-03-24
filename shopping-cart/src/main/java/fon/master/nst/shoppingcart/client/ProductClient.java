@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @FeignClient(name = "PRODUCT-SERVICE")
 public interface ProductClient {
 
-    @GetMapping("/products/{productId}")
+    @GetMapping("/products-api/products/{productId}")
     Product getProduct(@RequestHeader("Authorization") String accessToken, @PathVariable Long productId);
 
 }

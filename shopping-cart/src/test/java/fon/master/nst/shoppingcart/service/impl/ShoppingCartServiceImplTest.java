@@ -1,13 +1,10 @@
 package fon.master.nst.shoppingcart.service.impl;
 
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import fon.master.nst.shoppingcart.dto.Product;
+import fon.master.nst.shoppingcart.model.CartItem;
+import fon.master.nst.shoppingcart.model.ShoppingCart;
+import fon.master.nst.shoppingcart.repository.CartItemRepository;
+import fon.master.nst.shoppingcart.repository.ShoppingCartRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import fon.master.nst.shoppingcart.dto.Product;
-import fon.master.nst.shoppingcart.model.CartItem;
-import fon.master.nst.shoppingcart.model.ShoppingCart;
-import fon.master.nst.shoppingcart.repository.CartItemRepository;
-import fon.master.nst.shoppingcart.repository.ShoppingCartRepository;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
@@ -146,7 +142,7 @@ class ShoppingCartServiceImplTest {
         ShoppingCart testShoppingCart = new ShoppingCart();
         testShoppingCart.setCartId(1L);
 
-        when(shoppingCartRepository.findByCartId(testShoppingCart.getCartId())).thenReturn(testShoppingCart);
+        when(shoppingCartRepository.findById(testShoppingCart.getCartId())).thenReturn(Optional.of(testShoppingCart));
 
         ShoppingCart shoppingCartResult = shoppingCartServiceImpl.getCartById(testShoppingCart.getCartId());
 

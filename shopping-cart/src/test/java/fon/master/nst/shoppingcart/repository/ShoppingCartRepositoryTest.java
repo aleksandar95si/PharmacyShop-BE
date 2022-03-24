@@ -36,7 +36,7 @@ class ShoppingCartRepositoryTest {
     void testFindByCartId() {
         shoppingCartRepository.save(testShoppingCart);
 
-        ShoppingCart shoppingCartResult = shoppingCartRepository.findByCartId(testShoppingCart.getCartId());
+        ShoppingCart shoppingCartResult = shoppingCartRepository.findById(testShoppingCart.getCartId()).get();
 
         assertEquals(testShoppingCart, shoppingCartResult);
     }
