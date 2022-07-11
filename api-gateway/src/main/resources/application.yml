@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: ${API_GATEWAY_PORT}
 
 spring:
   application:

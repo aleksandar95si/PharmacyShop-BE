@@ -4,7 +4,7 @@ server:
     session:
       cookie:
         name: KSESSION
-  port: 8084
+  port: ${SHOPPING_CART_SERVICE_PORT}
 
 spring:
   application:

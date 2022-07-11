@@ -5,7 +5,7 @@ server:
     session:
       cookie:
         name: KSESSION
-  port: 8085
+  port: ${ORDER_SERVICE_PORT}
 
 spring:
   application:

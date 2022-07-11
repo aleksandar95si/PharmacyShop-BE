@@ -1,5 +1,5 @@
 server:
-  port: 8282
+  port: ${OAUTH_SERVER_PORT}
 
 spring:
   application:
@@ -8,7 +8,7 @@ spring:
     url: jdbc:mysql://localhost:3306/oauth-db?createDatabaseIfNotExist=true
     username: root
     password: root
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     initialization-mode: always
   jpa:
     hibernate:
@@ -22,7 +22,7 @@ spring:
 security:
   oauth2:
     resource:
-      user-info-uri: http://localhost:8282/oauth2/userinfo
+      user-info-uri: http://localhost:${OAUTH_SERVER_PORT}/oauth2/userinfo
 
 logging:
   level:
