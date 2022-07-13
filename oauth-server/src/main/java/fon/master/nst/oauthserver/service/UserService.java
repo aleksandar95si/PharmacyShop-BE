@@ -1,6 +1,6 @@
-package fon.master.nst.userservice.service;
+package fon.master.nst.oauthserver.service;
 
-import fon.master.nst.userservice.model.User;
+import fon.master.nst.oauthserver.model.User;
 
 public interface UserService {
 

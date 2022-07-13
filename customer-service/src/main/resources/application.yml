@@ -1,14 +1,11 @@
 server:
   servlet:
-    context-path: /products-api
-    session:
-      cookie:
-        name: KSESSION
-  port: ${PRODUCT_SERVICE_PORT}
+    context-path: /customers-api
+  port: ${CUSTOMER_SERVICE_PORT}
 
 spring:
   application:
-    name: PRODUCT-SERVICE
+    name: CUSTOMER-SERVICE
   datasource:
     url: jdbc:mysql://localhost:3306/pharmacy-shop-shared-database?serverTimezone=UTC
     username: root
@@ -24,18 +21,6 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
-
-security:
-  oauth2:
-    client:
-      client-id: product-service
-      client-secret: pass
-      user-authorization-uri: http://localhost:8282/oauth/authorize
-      access-token-uri: http://localhost:8282/oauth/token
-      scope: READ,WRITE
-      auto-approve-scopes: '.*'
-    resource:
-      token-info-uri: http://localhost:8282/oauth/check_token
 
 logging:
   file:

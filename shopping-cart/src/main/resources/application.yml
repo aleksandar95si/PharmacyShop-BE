@@ -10,7 +10,7 @@ spring:
   application:
     name: SHOPPING-CART
   datasource:
-    url: jdbc:mysql://localhost:3306/shopping-cart-service-dba?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/pharmacy-shop-shared-database?serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver

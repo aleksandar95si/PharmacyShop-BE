@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "username")
@@ -29,13 +29,13 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
     @Column(name = "enabled")
-    private boolean enabled;
+    private boolean enabled = true;
     @Column(name = "accountNonExpired")
-    private boolean accountNonExpired;
+    private boolean accountNonExpired = true;
     @Column(name = "credentialsNonExpired")
-    private boolean credentialsNonExpired;
+    private boolean credentialsNonExpired = true;
     @Column(name = "accountNonLocked")
-    private boolean accountNonLocked;
+    private boolean accountNonLocked = true;
 
 
     @ManyToMany(fetch = FetchType.EAGER)
