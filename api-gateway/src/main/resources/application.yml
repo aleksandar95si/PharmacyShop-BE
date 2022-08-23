@@ -17,8 +17,8 @@ spring:
           uri: lb://PRODUCT-SERVICE
           predicates:
             - Path=/products-api/**
-        - id: SHOPPING-CART
-          uri: lb://SHOPPING-CART
+        - id: SHOPPING-CART-SERVICE
+          uri: lb://SHOPPING-CART-SERVICE
           predicates:
             - Path=/shopping-carts-api/**
         - id: ORDER-SERVICE
@@ -29,7 +29,13 @@ spring:
           uri: lb://CUSTOMER-SERVICE
           predicates:
             - Path=/customers-api/**
- 
-            
+        - id: MAIL-SERVICE
+          uri: lb://MAIL-SERVICE
+          predicates:
+            - Path=/mails-api/**
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payments-api/**
             
         

@@ -34,8 +34,6 @@ class ShoppingCartServiceImplTest {
     private CartItemRepository cartItemRepository;
     @MockBean
     private RestTemplate restTemplate;
-    @MockBean
-    private CurrentLoggedInUserService currentLoggedInUserService;
 
     @Test
     void testAddItem() {
@@ -49,8 +47,8 @@ class ShoppingCartServiceImplTest {
         ResponseEntity<Product> responseProduct = new ResponseEntity<Product>(testProduct, HttpStatus.OK);
 
         when(shoppingCartServiceImpl.getShoppingCart()).thenReturn(testShoppingCart);
-        when(currentLoggedInUserService.getCurrentUser()).thenReturn("testUser");
-        mockStatic(AccessTokenService.class).when(AccessTokenService::getAccessToken).thenReturn("testToken");
+        when(AuthService.getCurrentUsersUsername()).thenReturn("testUser");
+        mockStatic(AuthService.class).when(AuthService::getAccessToken).thenReturn("testToken");
         when(restTemplate.exchange(Mockito.eq("http://PRODUCT-SERVICE/products/" + testProduct.getProductId()),
                 Mockito.eq(HttpMethod.GET), Mockito.<HttpEntity<Product>>any(), Mockito.<Class<Product>>any())).thenReturn(responseProduct);
 
@@ -70,7 +68,7 @@ class ShoppingCartServiceImplTest {
         ResponseEntity<Product> responseProduct = new ResponseEntity<Product>(testProduct, HttpStatus.OK);
 
         when(shoppingCartServiceImpl.getShoppingCart()).thenReturn(testShoppingCart);
-        when(currentLoggedInUserService.getCurrentUser()).thenReturn("testUser1");
+        when(AuthService.getCurrentUsersUsername()).thenReturn("testUser1");
         //mockStatic(AccesTokenService.class).when(AccesTokenService::getAccesToken).thenReturn("testToken");
         when(restTemplate.exchange(Mockito.eq("http://PRODUCT-SERVICE/products/" + testProduct.getProductId()),
                 Mockito.eq(HttpMethod.GET), Mockito.<HttpEntity<Product>>any(), Mockito.<Class<Product>>any())).thenReturn(responseProduct);
@@ -85,7 +83,7 @@ class ShoppingCartServiceImplTest {
     @Test
     void testGetShoppingCart() {
 
-        when(currentLoggedInUserService.getCurrentUser()).thenReturn("testUser");
+        when(AuthService.getCurrentUsersUsername()).thenReturn("testUser");
 
         shoppingCartServiceImpl.getShoppingCart();
     }

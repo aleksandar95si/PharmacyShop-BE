@@ -27,15 +27,15 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ResponseEntity<Long> getCustomersCredit(@RequestParam String username) {
+    public ResponseEntity<Customer> getCustomerByUsername(@RequestParam String username) {
 
-        Long credit = customerService.getCustomersCredit(username);
+        Customer customer = customerService.getCustomerByUsername(username);
 
-        if (credit == null) {
+        if (customer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(credit);
+        return ResponseEntity.ok(customer);
     }
 
 }

@@ -40,7 +40,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.findByProductId(productId));
     }
 
-    @GetMapping("/group/{name}")
+    @GetMapping("/category/{name}")
     public ResponseEntity<List<Product>> getProductsByGroupName(@PathVariable("name") String name) {
 
         logger.info("Clicked on group name: " + name);

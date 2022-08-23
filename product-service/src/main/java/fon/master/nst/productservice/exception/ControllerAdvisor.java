@@ -1,6 +1,6 @@
 package fon.master.nst.productservice.exception;
 
-import fon.master.nst.productservice.model.Error;
+import fon.master.nst.productservice.dto.Error;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

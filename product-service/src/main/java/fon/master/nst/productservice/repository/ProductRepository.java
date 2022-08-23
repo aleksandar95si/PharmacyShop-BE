@@ -11,6 +11,6 @@ import fon.master.nst.productservice.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByProductGroupName(String name);
+    List<Product> findByProductCategoryName(String name);
 
 }

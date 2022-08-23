@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: SHOPPING-CART
+    name: SHOPPING-CART-SERVICE
   datasource:
     url: jdbc:mysql://localhost:3306/pharmacy-shop-shared-database?serverTimezone=UTC
     username: root
@@ -16,6 +16,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
+      ddl-aut: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -24,6 +25,13 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
 
 security:
   oauth2:

@@ -10,7 +10,7 @@ Backend of application is based on microservice software architecture. It contai
 
 ##### Discovery Server (registry-server)
 
-Spring version of the Netflix solution - Spring Cloud Netflix Eureka Server - was used for implementation of the discovery server. Spring Cloud Netflix Eureka Server is implemented as a client side service discovery pattern, although it seems that it is a server side service discovery. All other microservices are registered as clients on this Eureka server that keeps information about them, and all communication between microservices takes place indirectly through this microservice.
+Spring version of the Netflix solution - Spring Cloud Netflix Eureka Server - was used for implementation of the discovery server. Spring Cloud Netflix Eureka Server is implemented as a client side fon.master.nst.service discovery pattern, although it seems that it is a server side fon.master.nst.service discovery. All other microservices are registered as clients on this Eureka server that keeps information about them, and all communication between microservices takes place indirectly through this microservice.
 
 ##### API Gateway (api-gateway)
 
@@ -20,11 +20,11 @@ Spring Cloud Gateway was used for implementation of this microservice. The API G
 
 Oauth2 Server is an authentication and authorization server. Spring Cloud Security was used for the implementation. When user login on a server, he receives a token that will be sent with each request. It is not possible to access microservices without a valid token. 
 
-##### User Service (user-service)
+##### User Service (user-fon.master.nst.service)
 
-This microservice is responsible for registration of new users. User service and Oauth2 serve shares a common database.
+This microservice is responsible for registration of new users. User fon.master.nst.service and Oauth2 serve shares a common database.
 
-##### Product Service (product-service)
+##### Product Service (product-fon.master.nst.service)
 
 The product microservice is responsible for reporting and modifying informations of available products. It contains it's own database which doesn't share with any other microservice.
 
@@ -32,7 +32,7 @@ The product microservice is responsible for reporting and modifying informations
 
 This microservice is responsible for adding and deleting products into shopping cart, and also it stores information about state of users shopping cart. It contains it's own database which doesn't share with any other microservice.
 
-##### Order Service (order-service)
+##### Order Service (order-fon.master.nst.service)
 
 This microservice has the role of ordering the product after the purchase is done, by sending a report to the pharmacy by e-mail. The report was made in the Jaspersoft studio, and in addition, FreeMarker was used to create a Template for sending e-mails.
 

@@ -27,8 +27,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Autowired
     private CartItemRepository cartItemRepository;
     @Autowired
-    private CurrentLoggedInUserService currentLoggedInUserService;
-    @Autowired
     private ProductClient productClient;
 
     private final Logger logger = LoggerFactory.getLogger(ShoppingCartServiceImpl.class);
@@ -38,16 +36,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         // 1) Proveriti da li postoji korpa za ulogovanog Usera, ako ne postoji napraviti je
         ShoppingCart currShopCart = getShoppingCart();
         if (currShopCart == null) {
-            currShopCart = new ShoppingCart(currentLoggedInUserService.getCurrentUser());
+            currShopCart = new ShoppingCart(AuthService.getCurrentUsersUsername());
             currShopCart.setBill(0L);
-            logger.info("Shopping cart created for user: " + currentLoggedInUserService.getCurrentUser());
+            logger.info("Shopping cart created for user: " + AuthService.getCurrentUsersUsername());
         }
 
         // 2) Pronadji proizvod
         Product currProd;
         try {
-            currProd = productClient.getProduct(AccessTokenService.getAccessToken(), productId);
+            currProd = productClient.getProduct(productId);
         } catch (FeignException feignException) {
+            System.out.println(feignException.contentUTF8());
+            System.out.println(feignException.request());
+            System.out.println(feignException.getMessage());
             throw new ApiException("Error during fetching products data from products-api.", HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.name());
         }
 
@@ -70,7 +71,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     }
 
     public ShoppingCart getShoppingCart() {
-        return shoppingCartRepository.findByUsername(currentLoggedInUserService.getCurrentUser());
+        return shoppingCartRepository.findByUsername(AuthService.getCurrentUsersUsername());
     }
 
     public void removeCartItem(Long itemId) {

@@ -60,7 +60,11 @@ public class ShoppingCart implements Serializable {
 
     @Override
     public String toString() {
-        return "ShoppingCart [cartId=" + cartId + ", username=" + username + ", cartItem=" + cartItem.size() + "]";
+        return "ShoppingCart{" +
+                "cartId=" + cartId +
+                ", username='" + username + '\'' +
+                ", bill=" + bill +
+                ", cartItem=" + cartItem +
+                '}';
     }
-
 }

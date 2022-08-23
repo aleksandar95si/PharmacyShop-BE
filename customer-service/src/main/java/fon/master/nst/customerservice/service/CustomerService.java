@@ -6,5 +6,5 @@ public interface CustomerService {
 
     Customer saveUser(Customer customer);
 
-    Long getCustomersCredit(String username);
+    Customer getCustomerByUsername(String username);
 }

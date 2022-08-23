@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import fon.master.nst.productservice.model.Product;
-import fon.master.nst.productservice.model.ProductGroup;
+import fon.master.nst.productservice.model.ProductCategory;
 import fon.master.nst.productservice.repository.ProductRepository;
 
 @SpringBootTest
@@ -29,29 +29,29 @@ class ProductServiceImplTest {
 
     @Test
     void testGetAllProductsByGroupName() {
-        ProductGroup testProductGroup = new ProductGroup();
-        testProductGroup.setGroupId(1L);
-        testProductGroup.setName("TestGroup");
+        ProductCategory testProductCategory = new ProductCategory();
+        testProductCategory.setCategoryId(1L);
+        testProductCategory.setName("TestGroup");
 
         Product testProduct1 = new Product();
         testProduct1.setProductId(1L);
         testProduct1.setName("TestProduct1");
         testProduct1.setPrice(100L);
-        testProduct1.setProductGroup(testProductGroup);
+        testProduct1.setProductCategory(testProductCategory);
 
         Product testProduct2 = new Product();
         testProduct2.setProductId(2L);
         testProduct2.setName("TestProduct2");
         testProduct2.setPrice(200L);
-        testProduct2.setProductGroup(testProductGroup);
+        testProduct2.setProductCategory(testProductCategory);
 
         List<Product> testList = new ArrayList<>();
         testList.add(testProduct1);
         testList.add(testProduct2);
 
-        when(productRepository.findByProductGroupName(testProductGroup.getName())).thenReturn(testList);
+        when(productRepository.findByProductCategoryName(testProductCategory.getName())).thenReturn(testList);
 
-        List<Product> testResult = productServiceImpl.getAllProductsByGroupName(testProductGroup.getName());
+        List<Product> testResult = productServiceImpl.getAllProductsByGroupName(testProductCategory.getName());
 
         assertEquals(2, testResult.size());
         assertEquals(testList.get(0), testResult.get(0));

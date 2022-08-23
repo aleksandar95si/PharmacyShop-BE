@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAllProductsByGroupName(String name) {
 
-        List<Product> listOfProductsByGroupName = productRepository.findByProductGroupName(name);
+        List<Product> listOfProductsByGroupName = productRepository.findByProductCategoryName(name);
 
         if (listOfProductsByGroupName == null || listOfProductsByGroupName.isEmpty()) {
             logger.error("Invalid group name!");

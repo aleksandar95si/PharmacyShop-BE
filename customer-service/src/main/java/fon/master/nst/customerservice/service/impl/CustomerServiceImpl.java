@@ -38,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Long getCustomersCredit(String username) {
+    public Customer getCustomerByUsername(String username) {
 
         Customer customer;
 
@@ -53,11 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
             customer = null;
         }
 
-        if (customer == null) {
-            return null;
-        }
-
-        return customer.getCredit();
+        return customer;
     }
 
 }
