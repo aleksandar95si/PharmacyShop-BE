@@ -1,0 +1,39 @@
+server:
+  servlet:
+    context-path: /customers-api
+  port: ${CUSTOMER_SERVICE_PORT}
+
+spring:
+  application:
+    name: CUSTOMER-SERVICE
+  datasource:
+    url: jdbc:mysql://localhost:3306/customer-service-db?serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+
+security:
+  oauth2:
+    client:
+      client-id: customer-service
+      client-secret: pass
+      user-authorization-uri: http://localhost:8282/oauth/authorize
+      access-token-uri: http://localhost:8282/oauth/token
+      scope: READ,WRITE
+      auto-approve-scopes: '.*'
+    resource:
+      token-info-uri: http://localhost:8282/oauth/check_token
+
+logging:
+  file:
+    name: C:\ELK\logs\microservice-app.log

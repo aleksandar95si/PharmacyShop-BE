@@ -1,27 +1,36 @@
 server:
   servlet:
-    servlet:
-      context-path: /orders-api
-    session:
-      cookie:
-        name: KSESSION
+    context-path: /orders-api
+  session:
+    cookie:
+      name: KSESSION
   port: ${ORDER_SERVICE_PORT}
 
 spring:
   application:
     name: ORDER-SERVICE
-  mail:
-    protocol: smtp
-    host: smtp.gmail.com
-    port: 587
-    username: nst.mail.sender.test@gmail.com
-    password: hbissbvxykufxjib
+  datasource:
+    url: jdbc:mysql://localhost:3306/pharmacy-shop-shared-database?serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+        format_sql: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
 
 security:
   oauth2:

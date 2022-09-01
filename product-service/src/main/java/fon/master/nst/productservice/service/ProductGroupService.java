@@ -2,14 +2,14 @@ package fon.master.nst.productservice.service;
 
 import java.util.List;
 
-import fon.master.nst.productservice.model.ProductGroup;
+import fon.master.nst.productservice.model.ProductCategory;
 
 public interface ProductGroupService {
 
-    void addProductGroup(ProductGroup productGroup);
+    void addProductGroup(ProductCategory productCategory);
 
-    ProductGroup findByName(String name);
+    ProductCategory findByName(String name);
 
-    List<ProductGroup> getAllGroups();
+    List<ProductCategory> getAllGroups();
 
 }

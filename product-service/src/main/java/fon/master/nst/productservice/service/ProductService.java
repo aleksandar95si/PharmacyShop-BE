@@ -12,8 +12,7 @@ public interface ProductService {
 
     Product findByProductId(Long productId);
 
-    void addProduct(Product product);
+    boolean updateProductsTotalAmount(List<Product> products);
 
-    void deleteById(Long id);
-
+    List<Product> findProductsById(List<Long> ids);
 }

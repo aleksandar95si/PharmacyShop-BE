@@ -1,6 +1,5 @@
 package fon.master.nst.productservice.controller;
 
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -25,11 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import fon.master.nst.productservice.model.Product;
-import fon.master.nst.productservice.model.ProductGroup;
+import fon.master.nst.productservice.model.ProductCategory;
 import fon.master.nst.productservice.service.impl.ProductGroupServiceImpl;
 import fon.master.nst.productservice.service.impl.ProductServiceImpl;
 
@@ -48,27 +46,27 @@ class ProductControllerTest {
 
     @Test
     void testGetProduct() throws Exception {
-        ProductGroup testProductGroup1 = new ProductGroup();
-        testProductGroup1.setGroupId(1L);
-        testProductGroup1.setName("testGroupName1");
+        ProductCategory testProductCategory1 = new ProductCategory();
+        testProductCategory1.setCategoryId(1L);
+        testProductCategory1.setName("testGroupName1");
 
-        ProductGroup testProductGroup2 = new ProductGroup();
-        testProductGroup2.setGroupId(2L);
-        testProductGroup2.setName("testGroupName2");
+        ProductCategory testProductCategory2 = new ProductCategory();
+        testProductCategory2.setCategoryId(2L);
+        testProductCategory2.setName("testGroupName2");
 
         Product testProduct1 = new Product();
         testProduct1.setProductId(1L);
         testProduct1.setName("testProductName1");
         testProduct1.setPrice(100L);
         testProduct1.setProductImgPath("/test/test1.png");
-        testProduct1.setProductGroup(testProductGroup1);
+        testProduct1.setProductCategory(testProductCategory1);
 
         Product testProduct2 = new Product();
         testProduct2.setProductId(2L);
         testProduct2.setName("testProductName2");
         testProduct2.setPrice(100L);
         testProduct2.setProductImgPath("/test/test2.png");
-        testProduct2.setProductGroup(testProductGroup2);
+        testProduct2.setProductCategory(testProductCategory2);
 
         when(productServiceImpl.findAllProducts()).thenReturn(List.of(testProduct1, testProduct2));
 
@@ -85,27 +83,27 @@ class ProductControllerTest {
 
     @Test
     void testGetProductsByGroupName() throws Exception {
-        ProductGroup testProductGroup = new ProductGroup();
-        testProductGroup.setGroupId(1L);
-        testProductGroup.setName("testGroupName");
+        ProductCategory testProductCategory = new ProductCategory();
+        testProductCategory.setCategoryId(1L);
+        testProductCategory.setName("testGroupName");
 
         Product testProduct1 = new Product();
         testProduct1.setProductId(1L);
         testProduct1.setName("testProductName1");
         testProduct1.setPrice(100L);
         testProduct1.setProductImgPath("/test/test1.png");
-        testProduct1.setProductGroup(testProductGroup);
+        testProduct1.setProductCategory(testProductCategory);
 
         Product testProduct2 = new Product();
         testProduct2.setProductId(2L);
         testProduct2.setName("testProductName2");
         testProduct2.setPrice(100L);
         testProduct2.setProductImgPath("/test/test2.png");
-        testProduct2.setProductGroup(testProductGroup);
+        testProduct2.setProductCategory(testProductCategory);
 
-        when(productServiceImpl.getAllProductsByGroupName(testProductGroup.getName())).thenReturn(List.of(testProduct1, testProduct2));
+        when(productServiceImpl.getAllProductsByGroupName(testProductCategory.getName())).thenReturn(List.of(testProduct1, testProduct2));
 
-        mockMvc.perform(get("/products/group/" + testProductGroup.getName()))
+        mockMvc.perform(get("/products/group/" + testProductCategory.getName()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -133,28 +131,4 @@ class ProductControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.productId", is(1)));
     }
-
-    @Test
-    void testAddProduct() throws JsonProcessingException, Exception {
-        ProductGroup testProductGroup = new ProductGroup();
-        testProductGroup.setName("testGroupName");
-
-        Product testProduct = new Product();
-        testProduct.setName("testProductName");
-        testProduct.setPrice(100L);
-        testProduct.setProductImgPath("/test/test.png");
-        testProduct.setProductGroup(testProductGroup);
-
-        mockMvc.perform(post("/products/add").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testProduct)))
-                .andExpect(status().isNoContent());
-        verify(productServiceImpl, times(1)).addProduct(testProduct);
-    }
-
-    @Test
-    void testDeleteProduct() throws Exception {
-        mockMvc.perform(delete("/products/delete/1")).andExpect(status().isNoContent());
-        verify(productServiceImpl, times(1)).deleteById(1L);
-    }
-
 }

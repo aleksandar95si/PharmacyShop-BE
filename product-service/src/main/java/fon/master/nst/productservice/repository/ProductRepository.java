@@ -1,16 +1,14 @@
 package fon.master.nst.productservice.repository;
 
-import java.util.List;
-
+import fon.master.nst.productservice.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import fon.master.nst.productservice.model.Product;
+import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    List<Product> findByProductGroupName(String name);
+    List<Product> findByProductCategoryName(String name);
 
 }

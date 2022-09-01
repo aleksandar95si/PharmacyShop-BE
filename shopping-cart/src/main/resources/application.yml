@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: SHOPPING-CART
+    name: SHOPPING-CART-SERVICE
   datasource:
     url: jdbc:mysql://localhost:3306/shopping-cart-service-dba?serverTimezone=UTC
     username: root
@@ -24,6 +24,13 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
 
 security:
   oauth2:

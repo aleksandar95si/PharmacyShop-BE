@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import fon.master.nst.productservice.model.Product;
-import fon.master.nst.productservice.model.ProductGroup;
+import fon.master.nst.productservice.model.ProductCategory;
 
 @SpringBootTest
 class ProductRepositoryTest {
@@ -19,29 +19,29 @@ class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
     @Autowired
-    private ProductGroupRepository productGroupRepository;
+    private ProductCategoryRepository productCategoryRepository;
 
-    private ProductGroup testProductGroup;
+    private ProductCategory testProductCategory;
     private Product testProduct1;
     private Product testProduct2;
 
 
     @BeforeEach
     void beforeEach() {
-        testProductGroup = new ProductGroup();
-        testProductGroup.setName("testGroupName");
+        testProductCategory = new ProductCategory();
+        testProductCategory.setName("testGroupName");
 
-        productGroupRepository.save(testProductGroup);
+        productCategoryRepository.save(testProductCategory);
 
         testProduct1 = new Product();
         testProduct1.setName("testProductName1");
         testProduct1.setPrice(100L);
-        testProduct1.setProductGroup(testProductGroup);
+        testProduct1.setProductCategory(testProductCategory);
 
         testProduct2 = new Product();
         testProduct2.setName("testProductName2");
         testProduct2.setPrice(200L);
-        testProduct2.setProductGroup(testProductGroup);
+        testProduct2.setProductCategory(testProductCategory);
 
         productRepository.save(testProduct1);
         productRepository.save(testProduct2);
@@ -50,13 +50,13 @@ class ProductRepositoryTest {
     @AfterEach
     void afterEach() {
         productRepository.deleteAll();
-        productGroupRepository.deleteAll();
+        productCategoryRepository.deleteAll();
     }
 
     @Test
     void testFindByProductGroupName() {
 
-        List<Product> productListResult = productRepository.findByProductGroupName(testProductGroup.getName());
+        List<Product> productListResult = productRepository.findByProductCategoryName(testProductCategory.getName());
 
         assertEquals(2, productListResult.size());
         assertEquals(testProduct1, productListResult.get(0));

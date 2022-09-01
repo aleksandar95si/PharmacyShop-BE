@@ -9,7 +9,7 @@ spring:
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
-    initialization-mode: always
+    initialization-mode: never
   jpa:
     hibernate:
       naming:
@@ -29,5 +29,3 @@ logging:
     org:
       hibernate:
         type: trace
-      
-       

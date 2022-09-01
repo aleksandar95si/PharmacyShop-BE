@@ -7,13 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import fon.master.nst.productservice.model.Product;
 import fon.master.nst.productservice.service.impl.ProductGroupServiceImpl;
@@ -31,8 +25,13 @@ public class ProductController {
     private final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @GetMapping
-    public List<Product> getProduct() {
-        return productServiceImpl.findAllProducts();
+    public ResponseEntity<List<Product>> getProducts(@RequestParam(required = false) List<Long> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.ok(productServiceImpl.findAllProducts());
+        } else {
+            List<Product> products = productServiceImpl.findProductsById(ids);
+            return products == null || products.isEmpty() ? ResponseEntity.notFound().build() : ResponseEntity.ok(products);        }
     }
 
     @GetMapping("/{id}")
@@ -40,25 +39,17 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.findByProductId(productId));
     }
 
-    @GetMapping("/group/{name}")
+    @GetMapping("/category/{name}")
     public ResponseEntity<List<Product>> getProductsByGroupName(@PathVariable("name") String name) {
 
-        logger.info("Clicked on group name: " + name);
-
         return ResponseEntity.status(HttpStatus.OK).body(productServiceImpl.getAllProductsByGroupName(name));
-
     }
 
     @PostMapping
-    public ResponseEntity addProduct(@RequestBody Product product) {
-        productServiceImpl.addProduct(product);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    public ResponseEntity<?> updateProductsTotalAmount(@RequestBody List<Product> products) {
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable("id") Long id) {
-        productServiceImpl.deleteById(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+        boolean isUpdated = productServiceImpl.updateProductsTotalAmount(products);
 
+        return isUpdated ? ResponseEntity.noContent().build() : ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

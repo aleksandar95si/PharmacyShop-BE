@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import fon.master.nst.productservice.model.ProductGroup;
-import fon.master.nst.productservice.repository.ProductGroupRepository;
+import fon.master.nst.productservice.model.ProductCategory;
+import fon.master.nst.productservice.repository.ProductCategoryRepository;
 import fon.master.nst.productservice.service.ProductGroupService;
 
 @Service
@@ -18,25 +18,25 @@ import fon.master.nst.productservice.service.ProductGroupService;
 public class ProductGroupServiceImpl implements ProductGroupService {
 
     @Autowired
-    private ProductGroupRepository productGroupRepository;
+    private ProductCategoryRepository productCategoryRepository;
 
-    public void addProductGroup(ProductGroup productGroup) {
-        productGroupRepository.save(productGroup);
+    public void addProductGroup(ProductCategory productCategory) {
+        productCategoryRepository.save(productCategory);
     }
 
-    public ProductGroup findByName(String name) {
+    public ProductCategory findByName(String name) {
 
-        ProductGroup productGroup = productGroupRepository.findByName(name);
+        ProductCategory productCategory = productCategoryRepository.findByName(name);
 
-        if (productGroup == null) {
+        if (productCategory == null) {
             throw new ApiException("Invalid group name!", HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name());
         }
 
-        return productGroup;
+        return productCategory;
     }
 
-    public List<ProductGroup> getAllGroups() {
+    public List<ProductCategory> getAllGroups() {
 
-        return productGroupRepository.findAll();
+        return productCategoryRepository.findAll();
     }
 }

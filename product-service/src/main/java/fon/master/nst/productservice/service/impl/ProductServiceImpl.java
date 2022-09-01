@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAllProductsByGroupName(String name) {
 
-        List<Product> listOfProductsByGroupName = productRepository.findByProductGroupName(name);
+        List<Product> listOfProductsByGroupName = productRepository.findByProductCategoryName(name);
 
         if (listOfProductsByGroupName == null || listOfProductsByGroupName.isEmpty()) {
             logger.error("Invalid group name!");
@@ -45,12 +45,28 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ApiException("There is no product with id " + productId, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.name()));
     }
 
-    public void addProduct(Product product) {
-        productRepository.save(product);
+    @Override
+    public boolean updateProductsTotalAmount(List<Product> products) {
+        try {
+            productRepository.saveAll(products);
+        } catch (Exception e) {
+            logger.error("An error has occurred while trying to update products total amount. Error: " + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
-    public void deleteById(Long id) {
-        productRepository.deleteById(id);
+    @Override
+    public List<Product> findProductsById(List<Long> ids) {
+
+        List<Product> products = null;
+
+        try {
+            products = productRepository.findAllById(ids);
+        } catch (Exception e) {
+            logger.error("An error has occured while trying to find all products by id. Error: " + e.getMessage());
+        }
+        return products;
     }
 
 }

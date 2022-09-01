@@ -1,0 +1,42 @@
+server:
+  servlet:
+    context-path: /mails-api
+    session:
+      cookie:
+        name: KSESSION
+  port: ${MAIL_SERVICE_PORT}
+
+spring:
+  application:
+    name: MAIL-SERVICE
+  mail:
+    protocol: smtp
+    host: smtp.gmail.com
+    port: 587
+    username: nst.mail.sender@gmail.com
+    password: auqkypktxbywuahk
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+security:
+  oauth2:
+    client:
+      client-id: mail-service
+      client-secret: pass
+      user-authorization-uri: http://localhost:8282/oauth/authorize
+      access-token-uri: http://localhost:8282/oauth/token
+      scope: READ,WRITE
+      auto-approve-scopes: '.*'
+    resource:
+      token-info-uri: http://localhost:8282/oauth/check_token
+
+logging:
+  file:
+    name: C:\ELK\logs\microservice-app.log
+      
+
+       

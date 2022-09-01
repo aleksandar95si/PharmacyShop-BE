@@ -21,11 +21,13 @@ public class Product implements Serializable {
     private Long productId;
     private String name;
     private Long price;
+    @Column(name = "total_amount")
+    private Long totalAmount;
     @Column(name = "product_img_path")
     private String productImgPath;
     @OneToOne
-    @JoinColumn(name = "group_id")
-    private ProductGroup productGroup;
+    @JoinColumn(name = "category_id")
+    private ProductCategory productCategory;
 
     public Product() {
 
@@ -59,16 +61,24 @@ public class Product implements Serializable {
         return productImgPath;
     }
 
+    public Long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public void setProductImgPath(String productImgPath) {
         this.productImgPath = productImgPath;
     }
 
-    public ProductGroup getProductGroup() {
-        return productGroup;
+    public ProductCategory getProductCategory() {
+        return productCategory;
     }
 
-    public void setProductGroup(ProductGroup productGroup) {
-        this.productGroup = productGroup;
+    public void setProductCategory(ProductCategory productCategory) {
+        this.productCategory = productCategory;
     }
 
     @Override
