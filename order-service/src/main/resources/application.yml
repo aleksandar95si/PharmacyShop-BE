@@ -10,12 +10,13 @@ spring:
   application:
     name: ORDER-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/pharmacy-shop-shared-database?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/saga_orchestration_order_service_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
+      ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

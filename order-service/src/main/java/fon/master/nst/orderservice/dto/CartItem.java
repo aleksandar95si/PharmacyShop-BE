@@ -61,7 +61,12 @@ public class CartItem implements Serializable {
 
     @Override
     public String toString() {
-        return "CartItem [itemId=" + itemId + ", productId=" + productId + ", shoppingCart=" + shoppingCart.toString() + "]";
+        return "CartItem{" +
+                "itemId=" + itemId +
+                ", productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", price=" + price +
+                ", shoppingCart=" + shoppingCart +
+                '}';
     }
-
 }

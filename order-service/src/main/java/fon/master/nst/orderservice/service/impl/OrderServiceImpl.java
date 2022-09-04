@@ -1,10 +1,7 @@
 package fon.master.nst.orderservice.service.impl;
 
 import feign.FeignException;
-import fon.master.nst.orderservice.client.CustomerClient;
-import fon.master.nst.orderservice.client.MailClient;
-import fon.master.nst.orderservice.client.PaymentClient;
-import fon.master.nst.orderservice.client.ProductClient;
+import fon.master.nst.orderservice.client.OrchestrationClient;
 import fon.master.nst.orderservice.dto.*;
 import fon.master.nst.orderservice.model.Order;
 import fon.master.nst.orderservice.model.OrderStatus;
@@ -15,136 +12,51 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private MailClient mailClient;
-    @Autowired
-    private PaymentClient paymentClient;
-    @Autowired
-    private ProductClient productClient;
-    @Autowired
-    private CustomerClient customerClient;
+    private OrchestrationClient orchestrationClient;
     @Autowired
     private OrderRepository orderRepository;
 
     private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Override
-    public OrderResponse createOrder(ShoppingCart shoppingCart) {
+    public OrderResponse processOrderRequest(ShoppingCart shoppingCart) {
 
         Order order = new Order();
         order.setUsername(shoppingCart.getUsername());
+        order.setOrderStatus(OrderStatus.CREATED);
 
-        List<Long> productIds = new ArrayList<>();
+        order = saveOrder(order);
 
-        Map<Long, Long> purchasedAmountOfItems = new HashMap<>();
+        OrderRequest orderRequest = new OrderRequest();
+        orderRequest.setOrderId(order.getOrderId());
+        orderRequest.setOrderStatus(OrderStatus.CREATED);
+        orderRequest.setShoppingCart(shoppingCart);
 
-        shoppingCart.getCartItems().forEach(cartItem -> {
-            productIds.add(cartItem.getProductId());
-            purchasedAmountOfItems.computeIfAbsent(cartItem.getProductId(), amount -> 0L);
-            purchasedAmountOfItems.computeIfPresent(cartItem.getProductId(), (id, amount) -> amount + 1);
-        });
-
-        List <Product> orderedProducts;
-
+        OrderResponse orderResponse;
         try {
-            orderedProducts = productClient.getProductsById(productIds);
+            orderResponse = orchestrationClient.processOrderRequest(orderRequest);
         } catch (FeignException e) {
-            logger.error("An error has occurred while trying to get fetch products data. Error: " + e.getMessage());
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        for (Product product : orderedProducts) {
-
-            Long productTotalAmount = product.getTotalAmount();
-
-            Long productOrderedAmount = purchasedAmountOfItems.get(product.getProductId());
-
-            if (productTotalAmount < productOrderedAmount) {
-
-                order.setOrderStatus(OrderStatus.OUT_OF_STOCK);
-
-                saveOrder(order);
-
-                return new OrderResponse(OrderStatus.OUT_OF_STOCK);
-            }
-
-            product.setTotalAmount(productTotalAmount - productOrderedAmount);
-        }
-
-        PaymentRequest paymentRequest = new PaymentRequest();
-        paymentRequest.setUsername(shoppingCart.getUsername());
-        paymentRequest.setAmount(shoppingCart.getBill());
-
-        PaymentResponse paymentResponse;
-        try {
-            paymentResponse = paymentClient.processPayment(paymentRequest);
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to call Payment service. Error: " + e.getMessage());
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        if (PaymentStatus.REJECTED.equals(paymentResponse.getPaymentStatus())) {
-
-            logger.error("Payment has been rejected due to exceeding the credit limit");
-            order.setOrderStatus(OrderStatus.REJECTED);
+            logger.info("An error has occurred while trying to call orchestration service. Error: " + e.getMessage());
             saveOrder(order);
-
-            return new OrderResponse(OrderStatus.REJECTED);
-        } else if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
-
-            logger.error("Payment service has failed to process payment");
-
-            return new OrderResponse(OrderStatus.FAILED);
+            return new OrderResponse(order.getOrderId(), OrderStatus.FAILED);
         }
 
-        try {
-            productClient.updateProductsTotalAmount(orderedProducts);
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to update product's stock. Error: " + e.getMessage());
-            paymentClient.rollbackPayment(paymentRequest);
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        order.setOrderStatus(OrderStatus.COMPLETED);
+        order.setOrderStatus(orderResponse.getOrderStatus());
         saveOrder(order);
 
-        Customer customer;
-
-        try {
-            customer = customerClient.getCustomerByUsername(shoppingCart.getUsername());
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to fetch Customer's data. Error: " + e.getLocalizedMessage());
-            customer = null;
-        }
-
-        if (customer != null) {
-
-            logger.info("Order microservice calls Mail microservice to send pdf report to the customer's email");
-
-            try {
-                MailRequest mailRequest = new MailRequest(customer.getEmail(), shoppingCart);
-                mailClient.send(mailRequest);
-            } catch (FeignException feignException) {
-                logger.error("An error has occurred while trying to call Mail service: " + feignException.getMessage());
-            }
-        }
-
-        return new OrderResponse(OrderStatus.COMPLETED);
+        return new OrderResponse(order.getOrderId(), orderResponse.getOrderStatus());
     }
 
-    private void saveOrder(Order order) {
+    private Order saveOrder(Order order) {
         try {
-            orderRepository.save(order);
+            order = orderRepository.save(order);
         } catch (Exception e) {
             logger.error(String.format("An error has occurred while trying to save order info (status: %s)", order.getOrderStatus()));
         }
+        return order;
     }
 }

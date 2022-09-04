@@ -10,12 +10,13 @@ spring:
   application:
     name: PRODUCT-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/product-service-dba?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/saga_orchestration_product_service_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
+      ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

@@ -5,6 +5,6 @@ import fon.master.nst.orderservice.dto.ShoppingCart;
 
 public interface OrderService {
 
-    OrderResponse createOrder(ShoppingCart shoppingCart);
+    OrderResponse processOrderRequest(ShoppingCart shoppingCart);
 
 }

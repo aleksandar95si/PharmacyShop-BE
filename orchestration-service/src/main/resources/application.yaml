@@ -1,0 +1,34 @@
+server:
+  servlet:
+    context-path: /orchestration-api
+    session:
+      cookie:
+        name: KSESSION
+  port: ${ORCHESTRATION_SERVICE_PORT}
+
+spring:
+  application:
+    name: ORCHESTRATION-SERVICE
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 30000
+        readTimeout: 30000
+
+security:
+  oauth2:
+    client:
+      client-id: orchestration-service
+      client-secret: pass
+      user-authorization-uri: http://localhost:8282/oauth/authorize
+      access-token-uri: http://localhost:8282/oauth/token
+      scope: READ,WRITE
+      auto-approve-scopes: '.*'
+    resource:
+      token-info-uri: http://localhost:8282/oauth/check_token
+
+logging:
+  file:
+    name: C:\ELK\logs\microservice-app.log

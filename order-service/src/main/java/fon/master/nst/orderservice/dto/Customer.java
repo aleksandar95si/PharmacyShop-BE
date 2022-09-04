@@ -3,8 +3,6 @@ package fon.master.nst.orderservice.dto;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
-@Table(name = "customer")
 public class Customer implements Serializable {
 
     @Id

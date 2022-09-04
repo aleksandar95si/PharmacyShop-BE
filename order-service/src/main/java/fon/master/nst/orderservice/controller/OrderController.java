@@ -22,9 +22,9 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/submit")
-    public ResponseEntity<OrderResponse> getOrderItemsAndSendEmail(@RequestBody ShoppingCart shoppingCart) {
+    public ResponseEntity<OrderResponse> processOrder(@RequestBody ShoppingCart shoppingCart) {
 
-        OrderResponse orderResponse = orderService.createOrder(shoppingCart);
+        OrderResponse orderResponse = orderService.processOrderRequest(shoppingCart);
 
         return ResponseEntity.ok(orderResponse);
     }
