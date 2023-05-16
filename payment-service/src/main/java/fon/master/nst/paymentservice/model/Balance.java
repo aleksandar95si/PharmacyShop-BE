@@ -1,8 +1,11 @@
 package fon.master.nst.paymentservice.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Data
 @Entity
 @Table(name = "balance")
 public class Balance implements Serializable {
@@ -11,39 +14,7 @@ public class Balance implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long balanceId;
+    private String accountNumber;
     private String username;
     private Long credit;
-
-    public Long getBalanceId() {
-        return balanceId;
-    }
-
-    public void setBalanceId(Long balanceId) {
-        this.balanceId = balanceId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Long getCredit() {
-        return credit;
-    }
-
-    public void setCredit(Long credit) {
-        this.credit = credit;
-    }
-
-    @Override
-    public String toString() {
-        return "Balance{" +
-                "balanceId=" + balanceId +
-                ", username='" + username + '\'' +
-                ", credit=" + credit +
-                '}';
-    }
 }

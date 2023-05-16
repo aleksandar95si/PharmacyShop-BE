@@ -9,4 +9,6 @@ public interface BalanceRepository extends JpaRepository<Balance, Long> {
 
     Balance findByUsername(String username);
 
+    Balance findByAccountNumber(String accountNumber);
+
 }

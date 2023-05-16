@@ -15,4 +15,5 @@ public interface ProductService {
     boolean updateProductsTotalAmount(List<Product> products);
 
     List<Product> findProductsById(List<Long> ids);
+
 }

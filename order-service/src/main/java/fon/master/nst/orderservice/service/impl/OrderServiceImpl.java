@@ -1,150 +1,113 @@
 package fon.master.nst.orderservice.service.impl;
 
-import feign.FeignException;
-import fon.master.nst.orderservice.client.CustomerClient;
-import fon.master.nst.orderservice.client.MailClient;
-import fon.master.nst.orderservice.client.PaymentClient;
-import fon.master.nst.orderservice.client.ProductClient;
-import fon.master.nst.orderservice.dto.*;
+import fon.master.nst.orderservice.dto.Customer;
+import fon.master.nst.orderservice.dto.OrderRequest;
+import fon.master.nst.orderservice.dto.OrderResponse;
+import fon.master.nst.orderservice.dto.ShoppingCart;
+import fon.master.nst.orderservice.event.OrderEvent;
 import fon.master.nst.orderservice.model.Order;
 import fon.master.nst.orderservice.model.OrderStatus;
 import fon.master.nst.orderservice.repository.OrderRepository;
 import fon.master.nst.orderservice.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.header.internals.RecordHeader;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
-    private MailClient mailClient;
-    @Autowired
-    private PaymentClient paymentClient;
-    @Autowired
-    private ProductClient productClient;
-    @Autowired
-    private CustomerClient customerClient;
-    @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private KafkaTemplate<String, OrderEvent> kafkaTemplate;
 
     private final Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
 
     @Override
-    public OrderResponse createOrder(ShoppingCart shoppingCart) {
+    public OrderResponse  createOrder(ShoppingCart shoppingCart) {
 
         Order order = new Order();
+        order.setOrderStatus(OrderStatus.CREATED);
         order.setUsername(shoppingCart.getUsername());
 
-        List<Long> productIds = new ArrayList<>();
+        try {
+            order = orderRepository.save(order);
+        } catch (Exception e) {
+            logger.error("An error has occurred while trying to save order to database. Error message: " + e.getMessage());
+        }
 
-        Map<Long, Long> purchasedAmountOfItems = new HashMap<>();
+        OrderEvent orderEvent = new OrderEvent();
+        orderEvent.setOrderId(order.getOrderId());
+        Customer customer = new Customer();
+        customer.setUsername(shoppingCart.getUsername());
+        orderEvent.setCustomer(customer);
+        orderEvent.setShoppingCart(shoppingCart);
+        orderEvent.setOrderStatus(OrderStatus.CREATED);
+        orderEvent.setShoppingCart(shoppingCart);
 
-        shoppingCart.getCartItems().forEach(cartItem -> {
-            productIds.add(cartItem.getProductId());
-            purchasedAmountOfItems.computeIfAbsent(cartItem.getProductId(), amount -> 0L);
-            purchasedAmountOfItems.computeIfPresent(cartItem.getProductId(), (id, amount) -> amount + 1);
+        Headers headers = new RecordHeaders();
+        headers.add(new RecordHeader("orderStatus", orderEvent.getOrderStatus().name().getBytes()));
+
+        ProducerRecord<String, OrderEvent> record = new ProducerRecord<String, OrderEvent>("order-topic", null, null, orderEvent, headers);
+
+        ListenableFuture<SendResult<String, OrderEvent>> future = kafkaTemplate.send(record);
+        future.addCallback(new ListenableFutureCallback<>() {
+            @Override
+            public void onSuccess(SendResult<String, OrderEvent> result) {
+                logger.info("Sent message={} to topic={} with offset={}", orderEvent, result.getRecordMetadata().topic(), result.getRecordMetadata().offset());
+            }
+
+            @Override
+            public void onFailure(Throwable ex) {
+                logger.error("Unable to send message={} due to : {}", orderEvent, ex.getMessage());
+            }
         });
 
-        List <Product> orderedProducts;
-
-        try {
-            orderedProducts = productClient.getProductsById(productIds);
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to get fetch products data. Error: " + e.getMessage());
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        for (Product product : orderedProducts) {
-
-            Long productTotalAmount = product.getTotalAmount();
-
-            Long productOrderedAmount = purchasedAmountOfItems.get(product.getProductId());
-
-            if (productTotalAmount < productOrderedAmount) {
-
-                order.setOrderStatus(OrderStatus.OUT_OF_STOCK);
-
-                saveOrder(order);
-
-                return new OrderResponse(OrderStatus.OUT_OF_STOCK);
-            }
-
-            product.setTotalAmount(productTotalAmount - productOrderedAmount);
-        }
-
-        PaymentRequest paymentRequest = new PaymentRequest();
-        paymentRequest.setUsername(shoppingCart.getUsername());
-        paymentRequest.setAmount(shoppingCart.getBill());
-
-        PaymentResponse paymentResponse;
-        try {
-            paymentResponse = paymentClient.processPayment(paymentRequest);
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to call Payment service. Error: " + e.getMessage());
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        if (PaymentStatus.REJECTED.equals(paymentResponse.getPaymentStatus())) {
-
-            logger.error("Payment has been rejected due to exceeding the credit limit");
-            order.setOrderStatus(OrderStatus.REJECTED);
-            saveOrder(order);
-
-            return new OrderResponse(OrderStatus.REJECTED);
-        } else if (PaymentStatus.FAILED.equals(paymentResponse.getPaymentStatus())) {
-
-            logger.error("Payment service has failed to process payment");
-
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        try {
-            productClient.updateProductsTotalAmount(orderedProducts);
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to update product's stock. Error: " + e.getMessage());
-            paymentClient.rollbackPayment(paymentRequest);
-            return new OrderResponse(OrderStatus.FAILED);
-        }
-
-        order.setOrderStatus(OrderStatus.COMPLETED);
-        saveOrder(order);
-
-        Customer customer;
-
-        try {
-            customer = customerClient.getCustomerByUsername(shoppingCart.getUsername());
-        } catch (FeignException e) {
-            logger.error("An error has occurred while trying to fetch Customer's data. Error: " + e.getLocalizedMessage());
-            customer = null;
-        }
-
-        if (customer != null) {
-
-            logger.info("Order microservice calls Mail microservice to send pdf report to the customer's email");
-
-            try {
-                MailRequest mailRequest = new MailRequest(customer.getEmail(), shoppingCart);
-                mailClient.send(mailRequest);
-            } catch (FeignException feignException) {
-                logger.error("An error has occurred while trying to call Mail service: " + feignException.getMessage());
-            }
-        }
-
-        return new OrderResponse(OrderStatus.COMPLETED);
+        return new OrderResponse(order.getOrderId(), order.getOrderStatus());
     }
 
-    private void saveOrder(Order order) {
+    private void updateOrderStatus(OrderEvent orderEvent) {
+        Order order = new Order();
+        order.setOrderId(orderEvent.getOrderId());
+        order.setOrderStatus(orderEvent.getOrderStatus());
+        order.setUsername(orderEvent.getShoppingCart().getUsername());
+
         try {
-            orderRepository.save(order);
+            order = orderRepository.save(order);
         } catch (Exception e) {
-            logger.error(String.format("An error has occurred while trying to save order info (status: %s)", order.getOrderStatus()));
+            logger.error("An error has occurred while trying to save order to database. Error message: " + e.getMessage());
+        }
+    };
+
+    @KafkaListener(topics = "order-topic", groupId = "order-service-group")
+    public void receive(@Payload OrderEvent orderEvent, @org.springframework.messaging.handler.annotation.Headers Map<String, Object> headers) {
+        // Proveri vrednost orderStatus header-a
+        if (headers.containsKey("orderStatus")) {
+            String orderStatus = new String((byte[]) headers.get("orderStatus"));
+            if (!orderStatus.equals(OrderStatus.CREATED.name())) {
+                // logika za obradu poruke
+                updateOrderStatus(orderEvent);
+            } else {
+                // ne želimo da deserijalizujemo poruku koja nije za nas, zato preskačemo obradu
+            }
+        } else {
         }
     }
 }

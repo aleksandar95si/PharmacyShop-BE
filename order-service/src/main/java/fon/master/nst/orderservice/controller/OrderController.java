@@ -1,5 +1,6 @@
 package fon.master.nst.orderservice.controller;
 
+import fon.master.nst.orderservice.dto.OrderRequest;
 import fon.master.nst.orderservice.dto.OrderResponse;
 import fon.master.nst.orderservice.dto.ShoppingCart;
 import fon.master.nst.orderservice.service.OrderService;
@@ -25,7 +26,6 @@ public class OrderController {
     public ResponseEntity<OrderResponse> getOrderItemsAndSendEmail(@RequestBody ShoppingCart shoppingCart) {
 
         OrderResponse orderResponse = orderService.createOrder(shoppingCart);
-
         return ResponseEntity.ok(orderResponse);
     }
 }

@@ -10,12 +10,13 @@ spring:
   application:
     name: PRODUCT-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/product-service-dba?serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/saga_choreography_product_service_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
+      ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -24,6 +25,24 @@ spring:
         show_sql: true
         use_sql_comments: true
         format_sql: true
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: product-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+            type:
+              mapping: fon.master.nst.orderservice.event.OrderEvent:fon.master.nst.productservice.event.OrderEvent,fon.master.nst.customerservice.event.OrderEvent:fon.master.nst.productservice.event.OrderEvent,fon.master.nst.paymentservice.event.OrderEvent:fon.master.nst.productservice.event.OrderEvent,fon.master.nst.mailservice.event.OrderEvent:fon.master.nst.productservice.event.OrderEvent
 
 security:
   oauth2:

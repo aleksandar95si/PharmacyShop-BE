@@ -14,13 +14,31 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: nst.mail.sender@gmail.com
-    password: auqkypktxbywuahk
+    password:
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: mail-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+            type:
+              mapping: fon.master.nst.customerservice.event.OrderEvent:fon.master.nst.mailservice.event.OrderEvent,fon.master.nst.paymentservice.event.OrderEvent:fon.master.nst.mailservice.event.OrderEvent,fon.master.nst.productservice.event.OrderEvent:fon.master.nst.mailservice.event.OrderEvent,fon.master.nst.orderservice.event.OrderEvent:fon.master.nst.mailservice.event.OrderEvent
 
 security:
   oauth2:
